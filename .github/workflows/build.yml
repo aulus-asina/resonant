@@ -1,0 +1,28 @@
+name: build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: prepare (msbuild)
+        uses: microsoft/setup-msbuild@v1
+
+      - name: prepare (dalamud)
+        run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile dalamud.zip
+          Expand-Archive -Force dalamud.zip "$env:AppData\XIVLauncher\addon\Hooks\dev\"
+
+      - name: build
+        run: dotnet build --configuration Release --no-restore --nologo
+
+      - name: upload
+        uses: actions/upload-artifact@v2
+        with:
+          path: $env:AppData\XIVLauncher\devPlugins\Resonant\
