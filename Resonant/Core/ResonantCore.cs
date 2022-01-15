@@ -13,12 +13,12 @@ namespace Resonant
         private const float RangeAutoAttack = 2.1f;
         private const float RangeAbilityMelee = 3f;
 
-        private Configuration config;
+        private ConfigurationProfile config;
         private ClientState clientState;
         private GameGui gui;
         private Canvas canvas;
 
-        public ResonantCore(Configuration config, ClientState clientState, GameGui gui)
+        public ResonantCore(ConfigurationProfile config, ClientState clientState, GameGui gui)
         {
             this.config = config;
             this.clientState = clientState;
@@ -77,13 +77,12 @@ namespace Resonant
         {
             var pos = player.Position;
             var c = config.Hitbox;
-            if (player.TargetObject != null)
+
+            if (c.UseTargetY && player.TargetObject != null)
             {
-                // Make the hitbox dot on the same Y-plane as the other effects we may draw;
-                // otherwise it get rather confusing to look at
                 pos.Y = player.TargetObject.Position.Y;
 
-                if (c.ShowDeltaY)
+                if (c.ShowTargetDeltaY)
                 {
                     canvas.Segment(pos, player.Position, new(c.Color, 2));
                 }
@@ -149,8 +148,9 @@ namespace Resonant
             // TODO: If the target doesn't need positionals then don't draw sectors
             foreach (var (region, brush) in regionBrushes)
             {
-                canvas.ActorConeXZ(
+                canvas.ActorDonutSliceXZ(
                     target,
+                    region.Radius.Inner,
                     region.Radius.Outer,
                     region.Positional.StartRads,
                     region.Positional.EndRads,

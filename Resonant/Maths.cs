@@ -7,6 +7,10 @@ namespace Resonant
     {
         static internal float PI = (float)Math.PI;
         static internal float TAU = PI * 2f;
+        static private int CIRCLE_SEGMENTS = 180;
+
+        // epsilon error value when comparing radian floats
+        static internal float Epsilon = PI * 0.01f;
 
         static internal float Radians(float degrees)
         {
@@ -39,12 +43,10 @@ namespace Resonant
             return (float)Math.Atan2(b.X - a.X, b.Z - a.Z);
         }
 
-        internal static Vector2 MinVector2(Vector2 a, Vector2 minimum)
+        // how many segments to split an arc up into when rendering
+        static internal int ArcSegments(float startRads, float endRads)
         {
-            return new(
-                Math.Max(a.X, minimum.X),
-                Math.Max(a.Y, minimum.Y)
-            );
+            return (int)(Math.Abs(endRads - startRads) * (CIRCLE_SEGMENTS / TAU)) + 1;
         }
     }
 }

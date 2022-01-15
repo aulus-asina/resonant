@@ -42,26 +42,26 @@ namespace Resonant
         internal static Positional RearLeft = Positional.FromDegrees(135, 180);
         internal static Positional RearRight = Positional.FromDegrees(180, 225);
 
-        internal static List<Positional> FrontPositionals(Configuration.PositionalsSettings c)
+        internal static List<Positional> FrontPositionals(ConfigurationProfile.PositionalsSettings c)
         {
             return c.FrontSeparate
                 ? new List<Positional> { FrontLeft, FrontRight }
                 : new List<Positional> { Front };
         }
 
-        internal static List<Positional> FlankPositionals(Configuration.PositionalsSettings c)
+        internal static List<Positional> FlankPositionals(ConfigurationProfile.PositionalsSettings c)
         {
             return new List<Positional> { FlankLeft, FlankRight };
         }
 
-        internal static List<Positional> RearPositionals(Configuration.PositionalsSettings c)
+        internal static List<Positional> RearPositionals(ConfigurationProfile.PositionalsSettings c)
         {
             return c.RearSeparate
                 ? new List<Positional> { RearLeft, RearRight }
                 : new List<Positional> { Rear };
         }
 
-        internal static List<(Positional, Brush)> FromConfig(Configuration.PositionalsSettings c)
+        internal static List<(Positional, Brush)> FromConfig(ConfigurationProfile.PositionalsSettings c)
         {
             List<(Positional, Brush)> positionals = new();
 
@@ -89,22 +89,21 @@ namespace Resonant
 
     internal static class Regions
     {
-        internal static List<(Region Region, Brush Brush)> FromConfig(Configuration.PositionalsSettings c, float meleeRange, float abilityRange)
+        internal static List<(Region Region, Brush Brush)> FromConfig(ConfigurationProfile.PositionalsSettings c, float meleeRange, float abilityRange)
         {
-            // FIXME: Make a config variable
-            var abilityRangeThicknessMultiplier = .1f;
             var regions = new List<(Region, Brush)>();
 
             foreach (var (positional, brush) in Positionals.FromConfig(c))
             {
                 regions.Add(new(new Region(positional, 0, meleeRange), brush));
 
-                if (c.ShowAbilityRegions)
+                if (c.MeleeAbilityRange)
                 {
                     var abBrush = brush with
                     {
-                        Thickness = brush.Thickness * abilityRangeThicknessMultiplier
+                        Thickness = c.MeleeAbilityThickness
                     };
+                    // FIXME: this needs to just draw the outer region
                     regions.Add(new(new Region(positional, meleeRange, abilityRange), abBrush));
                 }
             }

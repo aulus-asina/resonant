@@ -8,10 +8,10 @@ namespace Resonant
 {
     internal class DebugUI : IDisposable, IDrawable
     {
-        private Configuration config;
+        private ConfigurationProfile config;
         private ClientState clientState;
 
-        public DebugUI(Configuration config, ClientState clientState)
+        public DebugUI(ConfigurationProfile config, ClientState clientState)
         {
             this.config = config;
             this.clientState = clientState;

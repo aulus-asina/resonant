@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.Gui;
+using Dalamud.Logging;
 using ImGuiNET;
 using System;
 using System.Numerics;
@@ -49,7 +50,7 @@ namespace Resonant
 
         internal void Arc(Vector3 center, float radius, float startRads, float endRads)
         {
-            int segments = (int)((endRads - startRads) / (Maths.TAU) * SEGMENTS) + 1;
+            int segments = Maths.ArcSegments(startRads, endRads);
             var deltaRads = (endRads - startRads) / segments;
 
             for (var i = 0; i < segments + 1; i++)

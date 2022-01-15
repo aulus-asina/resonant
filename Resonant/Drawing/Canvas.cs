@@ -26,11 +26,11 @@ namespace Resonant
 
     internal class Canvas : IDisposable
     {
-        private Configuration config { get; }
+        private ConfigurationProfile config { get; }
 
         private GameGui gui { get; }
 
-        internal Canvas(Configuration config, GameGui gui)
+        internal Canvas(ConfigurationProfile config, GameGui gui)
         {
             this.config = config;
             this.gui = gui;
@@ -40,13 +40,13 @@ namespace Resonant
         {
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
             ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGuiHelpers.SetNextWindowPosRelativeMainViewport(config.WindowBox.TopLeft);
+            ImGuiHelpers.SetNextWindowPosRelativeMainViewport(config.ViewportWindowBox.TopLeft);
             ImGui.Begin("ResonantOverlay",
                 ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoTitleBar |
                 ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground);
 
             var displaySize = ImGui.GetIO().DisplaySize;
-            ImGui.SetWindowSize(config.WindowBox.SizeWith(displaySize));
+            ImGui.SetWindowSize(config.ViewportWindowBox.SizeWith(displaySize));
         }
 
         // ----------- actor-aware draw methods --------------
@@ -101,7 +101,7 @@ namespace Resonant
 
         internal void DonutSliceXZ(Vector3 center, float innerRadius, float outerRadius, float startRads, float endRads, Brush brush)
         {
-            if (innerRadius == 0 && endRads - startRads < Maths.Radians(181))
+            if (innerRadius == 0 && endRads - startRads <= (Maths.PI + Maths.Epsilon))
             {
                 // special case: a cone, which is a convex polygon
                 ConeXZ(center, outerRadius, startRads, endRads, brush);
@@ -110,19 +110,32 @@ namespace Resonant
 
             // a donut slice is a non-convex object so is not cleanly handled by imgui
             // instead, approximate with slices
-            var segments = 100;
+            var segments = Maths.ArcSegments(startRads, endRads);
             var radsPerSegment = (endRads - startRads) / (float)segments;
 
-            for (var i = 0; i < segments; i++)
-            {
-                var start = startRads + i * radsPerSegment;
-                var end = startRads + (i + 1) * radsPerSegment;
+            // outline
+            var outlineBrush = brush with { Fill = new() };
+            var outline = new ConvexShape(gui, outlineBrush);
+            outline.Arc(center, outerRadius, startRads, endRads);
+            outline.Arc(center, innerRadius, endRads, startRads);
+            outline.PointRadial(center, outerRadius, startRads);
+            outline.Done();
 
-                var shape = new ConvexShape(gui, brush);
-                shape.Arc(center, outerRadius, start, end);
-                shape.Arc(center, innerRadius, end, start);
-                shape.PointRadial(center, outerRadius, start);
-                shape.Done();
+            // fill
+            if (brush.HasFill())
+            {
+                var sliceBrush = brush with { Thickness = 0f };
+                for (var i = 0; i < segments; i++)
+                {
+                    var start = startRads + i * radsPerSegment;
+                    var end = startRads + (i + 1) * radsPerSegment;
+
+                    var shape = new ConvexShape(gui, sliceBrush);
+                    shape.Arc(center, outerRadius, start, end);
+                    shape.Arc(center, innerRadius, end, start);
+                    shape.PointRadial(center, outerRadius, start);
+                    shape.Done();
+                }
             }
         }
 

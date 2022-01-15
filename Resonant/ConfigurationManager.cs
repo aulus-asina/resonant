@@ -13,12 +13,12 @@ namespace Resonant
             DalamudPlugin = dalamudPlugin;
         }
 
-        public Configuration GetSavedConfig()
+        public ConfigurationProfile GetSavedConfig()
         {
-            return DalamudPlugin.GetPluginConfig() as Configuration ?? new Configuration();
+            return DalamudPlugin.GetPluginConfig() as ConfigurationProfile ?? new ConfigurationProfile();
         }
 
-        public void Save(Configuration configuration)
+        public void Save(ConfigurationProfile configuration)
         {
             DalamudPlugin.SavePluginConfig(configuration);
         }

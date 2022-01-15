@@ -6,7 +6,7 @@ using System.Numerics;
 namespace Resonant
 {
     [Serializable]
-    public class Configuration : IPluginConfiguration
+    public class ConfigurationProfile : IPluginConfiguration
     {
         public int Version { get; set; } = 0;
 
@@ -20,7 +20,7 @@ namespace Resonant
                 return viewportSize - TopLeft - BottomRight;
             }
         }
-        public WindowBoxSettings WindowBox = new();
+        public WindowBoxSettings ViewportWindowBox = new();
 
         public struct HitboxSettings
         {
@@ -28,7 +28,8 @@ namespace Resonant
             public Vector4 Color = ColorPresets.Green;
             public bool Outline = true;
             public Vector4 OutlineColor = ColorPresets.Black;
-            public bool ShowDeltaY = true;
+            public bool UseTargetY = true;
+            public bool ShowTargetDeltaY = true;
         };
         public HitboxSettings Hitbox = new();
 
@@ -53,7 +54,9 @@ namespace Resonant
         public struct PositionalsSettings
         {
             public bool Enabled = true;
-            public bool ShowAbilityRegions = true;
+
+            public bool MeleeAbilityRange = true;
+            public int MeleeAbilityThickness = 3;
 
             public int Thickness = 3;
             public Vector4 ColorFront = ColorPresets.Red;
@@ -84,18 +87,18 @@ namespace Resonant
         public bool ConfigUIVisible = false;
 
         [NonSerialized]
-        public bool DrawUIVisible = false;
+        public bool ViewportUIVisible = false;
 
-        public Configuration()
+        public ConfigurationProfile()
         {
         }
 
         // copy constructor
-        public Configuration(Configuration config)
+        public ConfigurationProfile(ConfigurationProfile config)
         {
             Version = config.Version;
 
-            WindowBox = config.WindowBox;
+            ViewportWindowBox = config.ViewportWindowBox;
 
             Hitbox = config.Hitbox;
             TargetRing = config.TargetRing;

@@ -14,7 +14,7 @@ namespace Resonant
         private DalamudPluginInterface PluginInterface { get; init; }
         private CommandManager CommandManager { get; init; }
         private ConfigurationManager ConfigManager { get; init; }
-        private Configuration ActiveConfig { get; init; }
+        private ConfigurationProfile ActiveConfig { get; init; }
         private ConfigurationUI ConfigUI { get; init; }
         private DebugUI DebugUI { get; init; }
         private ResonantCore ResonantCore { get; init; }

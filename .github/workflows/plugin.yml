@@ -41,7 +41,9 @@ jobs:
 
       - name: release latest main
         if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v1
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: latest
           tag_name: latest
