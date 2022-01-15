@@ -39,11 +39,20 @@ jobs:
           path: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\latest.zip
           if-no-files-found: error
 
-      - name: release latest main
+
+      ## release steps - only on main
+      - name: remove previous release
         if: github.ref == 'refs/heads/main'
-        uses: actions/create-release@v1
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: release latest main
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
         with:
           name: latest
           tag_name: latest

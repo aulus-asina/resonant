@@ -42,12 +42,10 @@ namespace Resonant
 
         internal void Initialize()
         {
-            CommandManager.AddHandler("/resonant", new CommandInfo(
-                (command, args) =>
-                {
-                    ActiveConfig.ConfigUIVisible = !ActiveConfig.ConfigUIVisible;
-                }
-            ));
+            CommandManager.AddHandler("/resonant", new CommandInfo(this.HandleSlashCommand)
+            {
+                HelpMessage = "Toggle configuration",
+            });
 
             PluginInterface.UiBuilder.Draw += () =>
             {
@@ -66,6 +64,11 @@ namespace Resonant
             {
                 ActiveConfig.ConfigUIVisible = true;
             }
+        }
+
+        internal void HandleSlashCommand(string command, string args)
+        {
+            ActiveConfig.ConfigUIVisible = !ActiveConfig.ConfigUIVisible;
         }
 
         public void Dispose()
