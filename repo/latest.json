@@ -17,6 +17,6 @@
     "DownloadLinkInstall": "https://github.com/aulus-asina/resonant/releases/download/latest/latest.zip",
     "DownloadLinkTesting": "https://github.com/aulus-asina/resonant/releases/download/latest/latest.zip",
     "DownloadLinkUpdate": "https://github.com/aulus-asina/resonant/releases/download/latest/latest.zip",
-    "IconUrl": ""
+    "IconUrl": "https://raw.githubusercontent.com/aulus-asina/resonant/main/repo/resonant.png"
   }
 ]
