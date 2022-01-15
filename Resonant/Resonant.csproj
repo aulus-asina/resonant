@@ -20,12 +20,6 @@
     <OutputPath>$(AppData)\XIVLauncher\devPlugins\Resonant\</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="..\Data\Resonant.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
   <PropertyGroup>
     <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
   </PropertyGroup>
