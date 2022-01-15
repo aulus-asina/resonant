@@ -86,9 +86,6 @@ namespace Resonant
         [NonSerialized]
         public bool DrawUIVisible = false;
 
-        [NonSerialized]
-        private Configuration? backup = null;
-
         public Configuration()
         {
         }
@@ -107,15 +104,6 @@ namespace Resonant
             Positionals = config.Positionals;
 
             DebugUIVisible = config.DebugUIVisible;
-
-            backup = config;
-        }
-
-        internal Configuration getBackup()
-        {
-            return backup != null
-                ? new Configuration(backup)
-                : new Configuration();
         }
 
         public override string ToString()

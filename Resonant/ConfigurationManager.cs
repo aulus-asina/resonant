@@ -6,21 +6,21 @@ namespace Resonant
     [Serializable]
     public class ConfigurationManager
     {
-        private DalamudPluginInterface? dalamud;
+        private DalamudPluginInterface DalamudPlugin;
 
-        public ConfigurationManager(DalamudPluginInterface dalamud)
+        public ConfigurationManager(DalamudPluginInterface dalamudPlugin)
         {
-            this.dalamud = dalamud;
+            DalamudPlugin = dalamudPlugin;
         }
 
         public Configuration GetSavedConfig()
         {
-            return this.dalamud!.GetPluginConfig() as Configuration ?? new Configuration();
+            return DalamudPlugin.GetPluginConfig() as Configuration ?? new Configuration();
         }
 
         public void Save(Configuration configuration)
         {
-            this.dalamud!.SavePluginConfig(configuration);
+            DalamudPlugin.SavePluginConfig(configuration);
         }
     }
 }

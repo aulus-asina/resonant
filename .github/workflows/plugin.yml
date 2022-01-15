@@ -39,7 +39,8 @@ jobs:
           path: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\latest.zip
           if-no-files-found: error
 
-      - name: release latest
+      - name: release latest main
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
           name: latest
