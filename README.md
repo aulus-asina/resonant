@@ -1,3 +1,5 @@
+[![build](https://github.com/aulus-asina/resonant/actions/workflows/plugin.yml/badge.svg)](https://github.com/aulus-asina/resonant/actions/workflows/plugin.yml)
+
 # Resonant
 Surpass your boundaries!
 

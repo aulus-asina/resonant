@@ -1,0 +1,10 @@
+﻿name: Resonant
+author: Aulus mal Asina
+punchline: A power worthy of Lord Zenos
+description: |-
+  Displays accurate player hitbox and positional outlines.
+tags:
+ - combat
+repo_url: 
+icon_url: 
+dalamud_api_level: 5
