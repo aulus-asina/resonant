@@ -35,5 +35,16 @@ jobs:
       - name: upload
         uses: actions/upload-artifact@v2
         with:
-          path: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\
+          name: Resonant
+          path: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\latest.zip
           if-no-files-found: error
+
+      - name: release latest
+        uses: softprops/action-gh-release@v1
+        with:
+          name: latest
+          tag_name: latest
+          prerelease: true
+          files: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\*
+          fail_on_unmatched_files: true
+
