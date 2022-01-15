@@ -3,4 +3,7 @@
 # Resonant
 
 ## Installation
-Add `https://raw.githubusercontent.com/aulus-asina/resonant/main/repo/latest.json` as a custom repository.
+Add as a custom repository:
+```
+https://raw.githubusercontent.com/aulus-asina/resonant/main/repo/latest.json
+```

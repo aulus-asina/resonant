@@ -59,7 +59,7 @@ namespace Resonant
                 // todo: reset to defaults button
 
                 ImGui.BeginTabBar("##Resonant Tabs");
-                if (ImGui.BeginTabItem("Hitbox##Testing"))
+                if (ImGui.BeginTabItem("Hitbox"))
                 {
                     ImGui.Checkbox("Hitbox", ref config.Hitbox.Enabled);
                     if (config.Hitbox.Enabled)
