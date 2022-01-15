@@ -2,7 +2,7 @@
 
 namespace Resonant
 {
-    internal interface IDrawable : IDisposable
+    interface IDrawable
     {
         public void Draw();
     }

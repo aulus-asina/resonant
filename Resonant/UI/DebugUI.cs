@@ -6,31 +6,30 @@ using System.Numerics;
 
 namespace Resonant
 {
-    internal class DebugUI : IDisposable, IDrawable
+    internal class DebugUI : IDrawable
     {
-        private ConfigurationProfile config;
-        private ClientState clientState;
-
-        public DebugUI(ConfigurationProfile config, ClientState clientState)
+        ConfigurationManager ConfigManager { get; }
+        ConfigurationProfile Profile
         {
-            this.config = config;
-            this.clientState = clientState;
+            get { return ConfigManager.ActiveProfile; }
         }
 
-        public void Dispose()
+        ClientState ClientState;
+
+        public DebugUI(ConfigurationManager configManager, ClientState clientState)
         {
-            // nothing to dispose
+            ConfigManager = configManager;
+            ClientState = clientState;
         }
 
         public void Draw()
         {
-            var player = clientState.LocalPlayer;
-            var target = clientState.LocalPlayer?.TargetObject;
-
-            if (!player || !config.DebugUIVisible) { return; }
+            var player = ClientState.LocalPlayer;
+            var target = ClientState.LocalPlayer?.TargetObject;
+            if (!player || !ConfigManager.DebugUIVisible) { return; }
 
             ImGui.SetNextWindowSize(new Vector2(300, 300), ImGuiCond.Always);
-            if (ImGui.Begin("Resonant Debug", ref config.DebugUIVisible))
+            if (ImGui.Begin("Resonant Debug", ref ConfigManager.Config.Debug))
             {
                 ImGui.Text($"Player hitbox: {player!.HitboxRadius}");
 

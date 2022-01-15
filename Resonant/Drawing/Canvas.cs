@@ -24,29 +24,29 @@ namespace Resonant
         }
     }
 
-    internal class Canvas : IDisposable
+    internal class Canvas
     {
-        private ConfigurationProfile config { get; }
+        private ConfigurationProfile Profile { get; }
 
-        private GameGui gui { get; }
+        private GameGui Gui { get; }
 
-        internal Canvas(ConfigurationProfile config, GameGui gui)
+        internal Canvas(ConfigurationProfile profile, GameGui gui)
         {
-            this.config = config;
-            this.gui = gui;
+            Profile = profile;
+            Gui = gui;
         }
 
         internal void Begin()
         {
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
             ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGuiHelpers.SetNextWindowPosRelativeMainViewport(config.ViewportWindowBox.TopLeft);
+            ImGuiHelpers.SetNextWindowPosRelativeMainViewport(Profile.ViewportWindowBox.TopLeft);
             ImGui.Begin("ResonantOverlay",
                 ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoTitleBar |
                 ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground);
 
             var displaySize = ImGui.GetIO().DisplaySize;
-            ImGui.SetWindowSize(config.ViewportWindowBox.SizeWith(displaySize));
+            ImGui.SetWindowSize(Profile.ViewportWindowBox.SizeWith(displaySize));
         }
 
         // ----------- actor-aware draw methods --------------
@@ -54,6 +54,7 @@ namespace Resonant
         {
             ConeXZ(actor.Position, radius, startRads + actor.Rotation, endRads + actor.Rotation, brush);
         }
+
         internal void ActorArrowXZ(GameObject actor, float radius, float angle, float scale, Brush brush)
         {
             var direction = angle + actor.Rotation;
@@ -70,7 +71,7 @@ namespace Resonant
 
             // edge case: when == 1 and there is a thickness, the arrow pokes out the sides.
             var drawBottom = scale != 1f;
-            var shape = new ConvexShape(gui, brush);
+            var shape = new ConvexShape(Gui, brush);
             if (drawBottom) shape.Point(pos);
             shape.PointRadial(pos, arrowSize, direction + Maths.Radians(90));
             shape.PointRadial(pos, arrowSize, direction + Maths.Radians(0));
@@ -89,10 +90,10 @@ namespace Resonant
             CircleArcXZ(position, radius, 0f, Maths.TAU, brush);
         }
 
-        // Position-dependent shapes
+        // ----------- position-based draw methods --------------
         internal void ConeXZ(Vector3 center, float radius, float startRads, float endRads, Brush brush)
         {
-            var shape = new ConvexShape(gui, brush);
+            var shape = new ConvexShape(Gui, brush);
             shape.Point(center);
             shape.Arc(center, radius, startRads, endRads);
             shape.Point(center);
@@ -115,7 +116,7 @@ namespace Resonant
 
             // outline
             var outlineBrush = brush with { Fill = new() };
-            var outline = new ConvexShape(gui, outlineBrush);
+            var outline = new ConvexShape(Gui, outlineBrush);
             outline.Arc(center, outerRadius, startRads, endRads);
             outline.Arc(center, innerRadius, endRads, startRads);
             outline.PointRadial(center, outerRadius, startRads);
@@ -130,7 +131,7 @@ namespace Resonant
                     var start = startRads + i * radsPerSegment;
                     var end = startRads + (i + 1) * radsPerSegment;
 
-                    var shape = new ConvexShape(gui, sliceBrush);
+                    var shape = new ConvexShape(Gui, sliceBrush);
                     shape.Arc(center, outerRadius, start, end);
                     shape.Arc(center, innerRadius, end, start);
                     shape.PointRadial(center, outerRadius, start);
@@ -149,22 +150,17 @@ namespace Resonant
 
         internal void CircleArcXZ(Vector3 gamePos, float radius, float startRads, float endRads, Brush brush)
         {
-            var shape = new ConvexShape(gui, brush);
+            var shape = new ConvexShape(Gui, brush);
             shape.Arc(gamePos, radius, startRads, endRads);
             shape.Done();
         }
 
         internal void Segment(Vector3 startPos, Vector3 endPos, Brush brush)
         {
-            var shape = new ConvexShape(gui, brush);
+            var shape = new ConvexShape(Gui, brush);
             shape.Point(startPos);
             shape.Point(endPos);
             shape.Done();
-        }
-
-        public void Dispose()
-        {
-            // TODO?
         }
     }
 }

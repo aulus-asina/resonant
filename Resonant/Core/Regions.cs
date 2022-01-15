@@ -103,7 +103,7 @@ namespace Resonant
                     {
                         Thickness = c.MeleeAbilityThickness
                     };
-                    // FIXME: this needs to just draw the outer region
+
                     regions.Add(new(new Region(positional, meleeRange, abilityRange), abBrush));
                 }
             }

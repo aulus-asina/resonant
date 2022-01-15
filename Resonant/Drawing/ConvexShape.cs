@@ -9,24 +9,17 @@ namespace Resonant
     // makes complete shapes using coordinates from in-game space
     internal class ConvexShape
     {
-        // number of segments used when rendering a circle
-        private const int SEGMENTS = 100;
+        internal readonly Brush Brush;
+        internal readonly GameGui Gui;
+        internal readonly ImDrawListPtr DrawList;
 
-        Brush brush;
-        GameGui gui;
-        ImDrawListPtr draw;
-        bool cullObject = true;
+        internal bool cullObject = true;
 
         internal ConvexShape(GameGui gui, Brush brush)
         {
-            this.gui = gui;
-            this.brush = brush;
-            draw = ImGui.GetWindowDrawList();
-            Initialize();
-        }
-
-        internal void Initialize()
-        {
+            Gui = gui;
+            Brush = brush;
+            DrawList = ImGui.GetWindowDrawList();
         }
 
         internal void Point(Vector3 worldPos)
@@ -34,8 +27,8 @@ namespace Resonant
             // TODO: implement proper clipping. everything goes crazy when
             // drawing lines outside the clip window and behind the camera
             // point
-            var visible = gui.WorldToScreen(worldPos, out Vector2 pos);
-            draw.PathLineTo(pos);
+            var visible = Gui.WorldToScreen(worldPos, out Vector2 pos);
+            DrawList.PathLineTo(pos);
             if (visible) { cullObject = false; }
         }
 
@@ -63,19 +56,19 @@ namespace Resonant
         {
             if (cullObject)
             {
-                draw.PathClear();
+                DrawList.PathClear();
                 return;
             }
 
-            if (brush.HasFill())
+            if (Brush.HasFill())
             {
-                draw.PathFillConvex(ImGui.GetColorU32(brush.Fill));
+                DrawList.PathFillConvex(ImGui.GetColorU32(Brush.Fill));
             }
-            else if (brush.Thickness != 0)
+            else if (Brush.Thickness != 0)
             {
-                draw.PathStroke(ImGui.GetColorU32(brush.Color), ImDrawFlags.None, brush.Thickness);
+                DrawList.PathStroke(ImGui.GetColorU32(Brush.Color), ImDrawFlags.None, Brush.Thickness);
             }
-            draw.PathClear();
+            DrawList.PathClear();
         }
     }
 }

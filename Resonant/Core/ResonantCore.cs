@@ -8,63 +8,61 @@ using System;
 
 namespace Resonant
 {
-    internal class ResonantCore : IDisposable, IDrawable
+    internal class ResonantCore : IDrawable
     {
         private const float RangeAutoAttack = 2.1f;
         private const float RangeAbilityMelee = 3f;
 
-        private ConfigurationProfile config;
-        private ClientState clientState;
-        private GameGui gui;
-        private Canvas canvas;
+        private ConfigurationManager ConfigManager;
+        private ClientState ClientState;
+        private GameGui Gui;
+        private Canvas Canvas;
 
-        public ResonantCore(ConfigurationProfile config, ClientState clientState, GameGui gui)
+        private ConfigurationProfile Profile
         {
-            this.config = config;
-            this.clientState = clientState;
-            this.gui = gui;
-
-            canvas = new Canvas(this.config, this.gui);
-
-            Initialize();
+            get { return ConfigManager.Config.Active; }
         }
 
-        internal void Initialize()
+        public ResonantCore(ConfigurationManager configManager, ClientState clientState, GameGui gui)
         {
-            // TODO
+            ConfigManager = configManager;
+            ClientState = clientState;
+            Gui = gui;
+
+            Canvas = new Canvas(Profile, Gui);
         }
 
         public void Draw()
         {
-            var player = clientState.LocalPlayer;
+            var player = ClientState.LocalPlayer;
             if (player == null)
             {
                 return;
             }
 
-            canvas.Begin();
+            Canvas.Begin();
 
-            if (config.PlayerRing.Enabled)
+            if (Profile.PlayerRing.Enabled)
             {
                 DrawPlayerRing(player);
             }
 
-            if (config.Cone.Enabled)
+            if (Profile.Cone.Enabled)
             {
                 DrawPlayerCone(player);
             }
 
-            if (config.TargetRing.Enabled)
+            if (Profile.TargetRing.Enabled)
             {
                 DrawTargetRing(player);
             }
 
-            if (config.Positionals.Enabled)
+            if (Profile.Positionals.Enabled)
             {
                 DrawPositionals(player);
             }
 
-            if (config.Hitbox.Enabled)
+            if (Profile.Hitbox.Enabled)
             {
                 DrawHitbox(player);
             }
@@ -76,7 +74,7 @@ namespace Resonant
         private void DrawHitbox(Character player)
         {
             var pos = player.Position;
-            var c = config.Hitbox;
+            var c = Profile.Hitbox;
 
             if (c.UseTargetY && player.TargetObject != null)
             {
@@ -84,43 +82,43 @@ namespace Resonant
 
                 if (c.ShowTargetDeltaY)
                 {
-                    canvas.Segment(pos, player.Position, new(c.Color, 2));
+                    Canvas.Segment(pos, player.Position, new(c.Color, 2));
                 }
             }
 
-            canvas.CircleXZ(pos, .02f, new(c.OutlineColor, 5));
-            canvas.CircleXZ(pos, .01f, new(c.Color, 4));
+            Canvas.CircleXZ(pos, .02f, new(c.OutlineColor, 5));
+            Canvas.CircleXZ(pos, .01f, new(c.Color, 4));
         }
 
         private void DrawPlayerRing(Character player)
         {
-            var c = config.PlayerRing;
-            canvas.CircleXZ(player.Position, c.Radius, c.Brush);
+            var c = Profile.PlayerRing;
+            Canvas.CircleXZ(player.Position, c.Radius, c.Brush);
         }
 
         private void DrawPlayerCone(Character player)
         {
             // rotate arc towards target (if exists)
-            var c = config.Cone;
+            var c = Profile.Cone;
             var target = player.TargetObject;
             var rotation = target != null
                 ? Math.Atan2(target.Position.X - player.Position.X, target.Position.Z - player.Position.Z)
                 : player.Rotation;
 
-            canvas.ConeCenteredXZ(player.Position, c.Radius, (float)rotation, Maths.Radians(c.Angle), c.Brush);
+            Canvas.ConeCenteredXZ(player.Position, c.Radius, (float)rotation, Maths.Radians(c.Angle), c.Brush);
         }
 
         private void DrawTargetRing(Character player)
         {
             if (player.TargetObject != null)
             {
-                canvas.CircleXZ(player.TargetObject.Position, config.TargetRing.Radius, config.TargetRing.Brush);
+                Canvas.CircleXZ(player.TargetObject.Position, Profile.TargetRing.Radius, Profile.TargetRing.Brush);
             }
         }
 
         private void DrawPositionals(Character player)
         {
-            var c = config.Positionals;
+            var c = Profile.Positionals;
             var target = player.TargetObject;
 
             // don't draw positionals if not targeting a battle mob
@@ -148,7 +146,7 @@ namespace Resonant
             // TODO: If the target doesn't need positionals then don't draw sectors
             foreach (var (region, brush) in regionBrushes)
             {
-                canvas.ActorDonutSliceXZ(
+                Canvas.ActorDonutSliceXZ(
                     target,
                     region.Radius.Inner,
                     region.Radius.Outer,
@@ -173,7 +171,7 @@ namespace Resonant
                             }
                         };
 
-                        canvas.ActorDonutSliceXZ(
+                        Canvas.ActorDonutSliceXZ(
                             target,
                             region.Radius.Inner, region.Radius.Outer,
                             region.Positional.StartRads, region.Positional.EndRads,
@@ -187,18 +185,13 @@ namespace Resonant
 
         private void DrawEnemyArrow(GameObject target, float angle, float pointRadius)
         {
-            var c = config.Positionals;
-            canvas.ActorArrowXZ(target, pointRadius, angle, c.ArrowScale, c.BrushFront);
-        }
-
-        public void Dispose()
-        {
-            canvas.Dispose();
+            var c = Profile.Positionals;
+            Canvas.ActorArrowXZ(target, pointRadius, angle, c.ArrowScale, c.BrushFront);
         }
 
         internal void Debug(String message, params object[] values)
         {
-            if (config.DebugUIVisible)
+            if (ConfigManager.Config.Debug)
             {
                 PluginLog.Log(message, values);
             }

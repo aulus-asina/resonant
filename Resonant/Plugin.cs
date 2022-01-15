@@ -7,78 +7,74 @@ using System;
 
 namespace Resonant
 {
-    public sealed class Plugin : IDalamudPlugin, IDisposable
+    public sealed class Plugin : IDalamudPlugin
     {
         public string Name => "Resonant";
 
-        private DalamudPluginInterface PluginInterface { get; init; }
-        private CommandManager CommandManager { get; init; }
-        private ConfigurationManager ConfigManager { get; init; }
-        private ConfigurationProfile ActiveConfig { get; init; }
-        private ConfigurationUI ConfigUI { get; init; }
-        private DebugUI DebugUI { get; init; }
-        private ResonantCore ResonantCore { get; init; }
+        private DalamudPluginInterface DalamudInterface { get; }
+        private CommandManager CommandManager { get; }
+        private ConfigurationManager ConfigManager { get; }
+
+        private ConfigurationUI ConfigUI { get; }
+        private DebugUI DebugUI { get; }
+        private ResonantCore ResonantCore { get; }
 
         public Plugin(
-            [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
+            [RequiredVersion("1.0")] DalamudPluginInterface dalamudInterface,
             [RequiredVersion("1.0")] CommandManager commandManager,
             ClientState clientState,
             GameGui gameGui
         )
         {
-            PluginInterface = pluginInterface;
+            DalamudInterface = dalamudInterface;
             CommandManager = commandManager;
 
-            ConfigManager = new ConfigurationManager(this.PluginInterface);
-            ActiveConfig = ConfigManager.GetSavedConfig();
+            ConfigManager = new ConfigurationManager(DalamudInterface);
 
-            ConfigUI = new ConfigurationUI(ConfigManager, ActiveConfig);
-            DebugUI = new DebugUI(ActiveConfig, clientState);
+            ConfigUI = new ConfigurationUI(ConfigManager);
+            DebugUI = new DebugUI(ConfigManager, clientState);
 
-            ResonantCore = new ResonantCore(ActiveConfig, clientState, gameGui);
+            ResonantCore = new ResonantCore(ConfigManager, clientState, gameGui);
 
             Initialize();
         }
 
         internal void Initialize()
         {
-            CommandManager.AddHandler("/resonant", new CommandInfo(this.HandleSlashCommand)
+            CommandManager.AddHandler("/resonant", new CommandInfo(HandleSlashCommand)
             {
                 HelpMessage = "Toggle configuration",
             });
 
-            PluginInterface.UiBuilder.Draw += () =>
+            DalamudInterface.UiBuilder.Draw += Draw;
+
+            DalamudInterface.UiBuilder.OpenConfigUi += () =>
             {
-                ConfigUI.Draw();
-                ResonantCore.Draw();
-                DebugUI.Draw();
+                ConfigManager.ConfigUIVisible = true;
             };
 
-            PluginInterface.UiBuilder.OpenConfigUi += () =>
+            // hack: show config by default if debug is enabled
+            if (ConfigManager.DebugUIVisible)
             {
-                ActiveConfig.ConfigUIVisible = true;
-            };
-
-            // HACK: show config by default if debug is enabled
-            if (ActiveConfig.DebugUIVisible)
-            {
-                ActiveConfig.ConfigUIVisible = true;
+                ConfigManager.ConfigUIVisible = true;
             }
+        }
+
+        internal void Draw()
+        {
+            ConfigUI.Draw();
+            ResonantCore.Draw();
+            DebugUI.Draw();
         }
 
         internal void HandleSlashCommand(string command, string args)
         {
-            ActiveConfig.ConfigUIVisible = !ActiveConfig.ConfigUIVisible;
+            ConfigManager.ConfigUIVisible = !ConfigManager.ConfigUIVisible;
         }
 
         public void Dispose()
         {
             CommandManager.RemoveHandler("/resonant");
-            CommandManager.RemoveHandler("/resdbg");
-
-            ResonantCore.Dispose();
-            ConfigUI.Dispose();
-            DebugUI.Dispose();
         }
     }
 }

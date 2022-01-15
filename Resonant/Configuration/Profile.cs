@@ -6,9 +6,11 @@ using System.Numerics;
 namespace Resonant
 {
     [Serializable]
-    public class ConfigurationProfile : IPluginConfiguration
+    public class ConfigurationProfile
     {
-        public int Version { get; set; } = 0;
+        public string Name;
+
+        public Guid ID;
 
         public struct WindowBoxSettings
         {
@@ -56,17 +58,17 @@ namespace Resonant
             public bool Enabled = true;
 
             public bool MeleeAbilityRange = true;
-            public int MeleeAbilityThickness = 3;
+            public int MeleeAbilityThickness = 1;
 
             public int Thickness = 3;
             public Vector4 ColorFront = ColorPresets.Red;
-            public bool FrontSeparate = true;
+            public bool FrontSeparate = false;
             public Vector4 ColorRear = ColorPresets.Magenta;
-            public bool RearSeparate = true;
+            public bool RearSeparate = false;
             public Vector4 ColorFlank = ColorPresets.Blurple;
 
             public bool HighlightCurrentRegion = true;
-            public float HighlightTransparencyMultiplier = 0.2f;
+            public float HighlightTransparencyMultiplier = 0.1f;
 
             public bool ArrowEnabled = true;
             public float ArrowScale = 1f;
@@ -77,36 +79,9 @@ namespace Resonant
         }
         public PositionalsSettings Positionals = new();
 
-        public bool DebugUIVisible = false;
-
-        // XXX: if adding values here be sure to add to the copy constructor
-        //      below and to ConfigurationUI. when i'm smarter reflection might
-        //      handle those chores instead.
-
-        [NonSerialized]
-        public bool ConfigUIVisible = false;
-
-        [NonSerialized]
-        public bool ViewportUIVisible = false;
-
-        public ConfigurationProfile()
-        {
-        }
-
-        // copy constructor
-        public ConfigurationProfile(ConfigurationProfile config)
-        {
-            Version = config.Version;
-
-            ViewportWindowBox = config.ViewportWindowBox;
-
-            Hitbox = config.Hitbox;
-            TargetRing = config.TargetRing;
-            PlayerRing = config.PlayerRing;
-            Cone = config.Cone;
-            Positionals = config.Positionals;
-
-            DebugUIVisible = config.DebugUIVisible;
+        public ConfigurationProfile(string name) {
+            Name = name;
+            ID = Guid.NewGuid();
         }
 
         public override string ToString()
