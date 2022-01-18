@@ -145,9 +145,20 @@ namespace Resonant
 
                 ImGui.ColorEdit4("Front Color", ref Profile.Positionals.ColorFront, ImGuiColorEditFlags.NoInputs);
                 ImGui.Checkbox("Separate Front Regions", ref Profile.Positionals.FrontSeparate);
+
                 ImGui.ColorEdit4("Flank Color", ref Profile.Positionals.ColorFlank, ImGuiColorEditFlags.NoInputs);
+                if (ImGui.BeginCombo("Flank Regions", Profile.Positionals.FlankType.Description())) {
+                    foreach(FlankRegionSetting setting in Enum.GetValues(typeof(FlankRegionSetting))) {
+                        if (ImGui.Selectable(setting.Description())) {
+                            Profile.Positionals.FlankType = setting;
+                        }
+                    }
+                    ImGui.EndCombo();
+                }
+
                 ImGui.ColorEdit4("Rear Color", ref Profile.Positionals.ColorRear, ImGuiColorEditFlags.NoInputs);
                 ImGui.Checkbox("Separate Rear Regions", ref Profile.Positionals.RearSeparate);
+
                 ImGui.Checkbox("Highlight Current Region", ref Profile.Positionals.HighlightCurrentRegion);
                 if (Profile.Positionals.HighlightCurrentRegion)
                 {

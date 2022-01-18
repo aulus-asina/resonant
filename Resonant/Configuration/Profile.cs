@@ -1,5 +1,4 @@
-﻿using Dalamud.Configuration;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Numerics;
 
@@ -66,6 +65,7 @@ namespace Resonant
             public Vector4 ColorRear = ColorPresets.Magenta;
             public bool RearSeparate = false;
             public Vector4 ColorFlank = ColorPresets.Blurple;
+            public FlankRegionSetting FlankType = FlankRegionSetting.RearOnly;
 
             public bool HighlightCurrentRegion = true;
             public float HighlightTransparencyMultiplier = 0.1f;
@@ -79,7 +79,8 @@ namespace Resonant
         }
         public PositionalsSettings Positionals = new();
 
-        public ConfigurationProfile(string name) {
+        public ConfigurationProfile(string name)
+        {
             Name = name;
             ID = Guid.NewGuid();
         }
@@ -98,5 +99,31 @@ namespace Resonant
 
         public static readonly Vector4 Blurple = new(0.275f, 0.05f, 0.92f, 1.0f);
         public static readonly Vector4 Magenta = new(0.92f, 0.05f, 0.829f, 1.0f);
+    }
+
+    // todo: better name
+    public enum FlankRegionSetting
+    {
+        Full, // draw the full 90deg
+        RearOnly, // only draw rear 45deg
+        FullSeparated, // draw the full 90deg, but separate the regions
+    }
+
+    internal static class FlankRegionSettingExtension
+    {
+        public static String Description(this FlankRegionSetting setting)
+        {
+            switch (setting)
+            {
+                case FlankRegionSetting.Full:
+                    return "Full (90 degrees)";
+                case FlankRegionSetting.RearOnly:
+                    return "Rear Only (45 degrees)";
+                case FlankRegionSetting.FullSeparated:
+                    return "Separated (90 degrees, separated)";
+                default:
+                    return "error - unknown setting";
+            }
+        }
     }
 }

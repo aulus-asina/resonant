@@ -33,25 +33,54 @@ namespace Resonant
 
     internal static class Positionals
     {
-        internal static Positional FrontLeft = Positional.FromDegrees(0, 90);
-        internal static Positional FrontRight = Positional.FromDegrees(-90, 0);
-        internal static Positional Front = Positional.FromDegrees(-90, 90);
-        internal static Positional FlankLeft = Positional.FromDegrees(90, 135);
-        internal static Positional FlankRight = Positional.FromDegrees(225, 270);
+        internal static Positional FrontLeft90 = Positional.FromDegrees(0, 90);
+        internal static Positional FrontRight90 = Positional.FromDegrees(-90, 0);
+        internal static Positional FrontLeft45 = Positional.FromDegrees(0, 45);
+        internal static Positional FrontRight45 = Positional.FromDegrees(-45, 0);
+        internal static Positional Front90 = Positional.FromDegrees(-45, 45);
+        internal static Positional Front180 = Positional.FromDegrees(-90, 90);
+
+        internal static Positional FlankLeft90 = Positional.FromDegrees(45, 135);
+        internal static Positional FlankRight90 = Positional.FromDegrees(225, 315);
+        internal static Positional FlankLeftFront = Positional.FromDegrees(45, 90);
+        internal static Positional FlankLeftRear = Positional.FromDegrees(90, 135);
+        internal static Positional FlankRightFront = Positional.FromDegrees(270, 315);
+        internal static Positional FlankRightRear = Positional.FromDegrees(225, 270);
+
         internal static Positional Rear = Positional.FromDegrees(135, 225);
         internal static Positional RearLeft = Positional.FromDegrees(135, 180);
         internal static Positional RearRight = Positional.FromDegrees(180, 225);
 
         internal static List<Positional> FrontPositionals(ConfigurationProfile.PositionalsSettings c)
         {
-            return c.FrontSeparate
-                ? new List<Positional> { FrontLeft, FrontRight }
-                : new List<Positional> { Front };
+            // todo: make logic cleaner
+            if (c.FlankType == FlankRegionSetting.RearOnly) {
+                if (c.FrontSeparate) {
+                    return new List<Positional> { FrontLeft90, FrontRight90 };
+                } else {
+                    return new List<Positional> { Front180 };
+                }
+            } else {
+                if (c.FrontSeparate) {
+                    return new List<Positional> { FrontLeft45, FrontRight45 };
+                } else {
+                    return new List<Positional> { Front90 };
+                }
+            }
         }
 
         internal static List<Positional> FlankPositionals(ConfigurationProfile.PositionalsSettings c)
         {
-            return new List<Positional> { FlankLeft, FlankRight };
+            switch (c.FlankType)
+            {
+                case FlankRegionSetting.Full:
+                    return new List<Positional> { FlankLeft90, FlankRight90 };
+                case FlankRegionSetting.FullSeparated:
+                    return new List<Positional> { FlankLeftFront, FlankLeftRear, FlankRightFront, FlankRightRear };
+                case FlankRegionSetting.RearOnly:
+                default:
+                    return new List<Positional> { FlankLeftRear, FlankRightRear };
+            }
         }
 
         internal static List<Positional> RearPositionals(ConfigurationProfile.PositionalsSettings c)
