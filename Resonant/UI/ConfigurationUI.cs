@@ -5,12 +5,16 @@ using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+using Dalamud.Data;
+using Lumina.Excel.GeneratedSheets;
 
 namespace Resonant
 {
     class ConfigurationUI : IDrawable
     {
         ConfigurationManager ConfigManager { get; }
+        DataManager DataManager { get; }
+
         ConfigurationProfile Profile
         {
             get { return ConfigManager.ActiveProfile; }
@@ -22,9 +26,10 @@ namespace Resonant
 
         private byte[] PromptProfileName = new byte[512];
 
-        public ConfigurationUI(ConfigurationManager configManager)
+        public ConfigurationUI(ConfigurationManager configManager, DataManager dataManager)
         {
             ConfigManager = configManager;
+            DataManager = dataManager;
         }
 
         public void Draw()
@@ -223,6 +228,36 @@ namespace Resonant
             } else {
                 SetProfileNamePrompt(ConfigManager.Config.Active.Name);
             }
+
+            ImGui.Text("Use profile for jobs:");
+            foreach (var (classJob, index) in GetCombatClassJobs().Select((job, ndx) => (job, ndx))) {
+                // todo: combine pre-job classes with the job like GLA/PLD and MRD/WAR
+                // special case: ACN->SMN (not SCH)
+                if ((index) % 3 != 0) {
+                    ImGui.SameLine();
+                }
+
+                var isChecked = ConfigManager.ActiveProfile.Jobs.Contains(classJob.Abbreviation);
+                var assignedProfile = ConfigManager.Config.ProfileForClassJob(classJob.Abbreviation);
+
+                if (assignedProfile != null && assignedProfile != Profile) {
+                    var unchanging = false;
+                    ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.5f);
+                    ImGui.Checkbox(classJob.Abbreviation, ref unchanging);
+                    ImGui.PopStyleVar();
+                    if (ImGui.IsItemHovered()) {
+                        ImGui.SetTooltip($"Assigned to profile: {assignedProfile.Name}");
+                    }
+                } else {
+                    if (ImGui.Checkbox(classJob.Abbreviation, ref isChecked)) {
+                        if (isChecked) {
+                            ConfigManager.ActiveProfile.Jobs.Add(classJob.Abbreviation);
+                        } else {
+                            ConfigManager.ActiveProfile.Jobs.Remove(classJob.Abbreviation);
+                        }
+                    }
+                }
+            }
         }
 
         void SetProfileNamePrompt(string name)
@@ -304,6 +339,15 @@ namespace Resonant
         {
             ImGui.Text(Regex.Replace(label, "##\\w+", ""));
             ImGui.DragInt($"##{label}", ref v, v_speed, v_min, v_max);
+        }
+
+        List<ClassJob> GetCombatClassJobs() {
+            return DataManager
+                .GetExcelSheet<ClassJob>()!
+                .Where(
+                    (j) => j.Role != 0
+                )
+                .ToList();
         }
     }
 }

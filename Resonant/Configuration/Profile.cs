@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace Resonant
@@ -79,8 +80,9 @@ namespace Resonant
         }
         public PositionalsSettings Positionals = new();
 
-        public ConfigurationProfile(string name)
-        {
+        public List<string> Jobs = new();
+
+        public ConfigurationProfile(string name) {
             Name = name;
             ID = Guid.NewGuid();
         }

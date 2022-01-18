@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState;
+﻿using Dalamud.Data;
+using Dalamud.Game.ClientState;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.IoC;
@@ -23,7 +24,8 @@ namespace Resonant
             [RequiredVersion("1.0")] DalamudPluginInterface dalamudInterface,
             [RequiredVersion("1.0")] CommandManager commandManager,
             ClientState clientState,
-            GameGui gameGui
+            GameGui gameGui,
+            DataManager dataManager
         )
         {
             DalamudInterface = dalamudInterface;
@@ -31,10 +33,10 @@ namespace Resonant
 
             ConfigManager = new ConfigurationManager(DalamudInterface);
 
-            ConfigUI = new ConfigurationUI(ConfigManager);
+            ConfigUI = new ConfigurationUI(ConfigManager, dataManager);
             DebugUI = new DebugUI(ConfigManager, clientState);
 
-            ResonantCore = new ResonantCore(ConfigManager, clientState, gameGui);
+            ResonantCore = new ResonantCore(ConfigManager, clientState, gameGui, dataManager);
 
             Initialize();
         }

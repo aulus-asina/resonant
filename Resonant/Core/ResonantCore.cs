@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState;
+﻿using Dalamud.Data;
+using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Gui;
@@ -17,23 +18,33 @@ namespace Resonant
         private ClientState ClientState;
         private GameGui Gui;
         private Canvas Canvas;
+        private GameStateObserver GameStateObserver;
 
         private ConfigurationProfile Profile
         {
             get { return ConfigManager.Config.Active; }
         }
 
-        public ResonantCore(ConfigurationManager configManager, ClientState clientState, GameGui gui)
+        public ResonantCore(ConfigurationManager configManager, ClientState clientState, GameGui gui, DataManager dataManager)
         {
             ConfigManager = configManager;
             ClientState = clientState;
             Gui = gui;
-
             Canvas = new Canvas(Profile, Gui);
+            GameStateObserver = new(clientState, dataManager);
+
+            Initialize();
+        }
+
+        internal void Initialize()
+        {
+            GameStateObserver.JobChangedEvent += OnJobChange;
         }
 
         public void Draw()
         {
+            GameStateObserver.Observe();
+
             var player = ClientState.LocalPlayer;
             if (player == null)
             {
@@ -194,6 +205,16 @@ namespace Resonant
             if (ConfigManager.Config.Debug)
             {
                 PluginLog.Log(message, values);
+            }
+        }
+
+        private void OnJobChange(object sender, string classJobAbbrev)
+        {
+            Dalamud.Logging.PluginLog.Log($"Detected class change: {classJobAbbrev}");
+
+            var profile = ConfigManager.Config.ProfileForClassJob(classJobAbbrev);
+            if (profile != null) {
+                ConfigManager.Config.Active = profile;
             }
         }
     }

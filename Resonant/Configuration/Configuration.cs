@@ -39,5 +39,10 @@ namespace Resonant
             Active = profile;
             return profile;
         }
+
+        internal ConfigurationProfile? ProfileForClassJob(string classJobAbbreviation)
+        {
+            return Profiles.Find((p) => p.Jobs.Contains(classJobAbbreviation));
+        }
     }
 }
