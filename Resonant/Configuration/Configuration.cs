@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace Resonant
 {
@@ -12,6 +13,18 @@ namespace Resonant
 
         public Guid ActiveProfileID;
         public List<ConfigurationProfile> Profiles = new();
+
+        public struct WindowBoxSettings
+        {
+            // relative to the viewport's topleft/bottomright
+            public Vector2 TopLeft = new(0, 0);
+            public Vector2 BottomRight = new(0, 0);
+            public Vector2 SizeWith(Vector2 viewportSize)
+            {
+                return viewportSize - TopLeft - BottomRight;
+            }
+        }
+        public WindowBoxSettings ViewportWindowBox = new();
 
         public bool Debug = false;
 

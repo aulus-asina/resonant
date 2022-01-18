@@ -12,18 +12,6 @@ namespace Resonant
 
         public Guid ID;
 
-        public struct WindowBoxSettings
-        {
-            // relative to the viewport's topleft/bottomright
-            public Vector2 TopLeft = new(0, 0);
-            public Vector2 BottomRight = new(0, 0);
-            public Vector2 SizeWith(Vector2 viewportSize)
-            {
-                return viewportSize - TopLeft - BottomRight;
-            }
-        }
-        public WindowBoxSettings ViewportWindowBox = new();
-
         public struct HitboxSettings
         {
             public bool Enabled = true;

@@ -13,16 +13,11 @@ namespace Resonant
     class ConfigurationUI : IDrawable
     {
         ConfigurationManager ConfigManager { get; }
-        DataManager DataManager { get; }
+        Configuration Config { get { return ConfigManager.Config; } }
+        ConfigurationProfile Profile { get { return ConfigManager.ActiveProfile; } }
+        List<ConfigurationProfile> Profiles { get { return ConfigManager.Config.Profiles; } }
 
-        ConfigurationProfile Profile
-        {
-            get { return ConfigManager.ActiveProfile; }
-        }
-        List<ConfigurationProfile> Profiles
-        {
-            get { return ConfigManager.Config.Profiles; }
-        }
+        DataManager DataManager { get; }
 
         private byte[] PromptProfileName = new byte[512];
 
@@ -152,9 +147,12 @@ namespace Resonant
                 ImGui.Checkbox("Separate Front Regions", ref Profile.Positionals.FrontSeparate);
 
                 ImGui.ColorEdit4("Flank Color", ref Profile.Positionals.ColorFlank, ImGuiColorEditFlags.NoInputs);
-                if (ImGui.BeginCombo("Flank Regions", Profile.Positionals.FlankType.Description())) {
-                    foreach(FlankRegionSetting setting in Enum.GetValues(typeof(FlankRegionSetting))) {
-                        if (ImGui.Selectable(setting.Description())) {
+                if (ImGui.BeginCombo("Flank Regions", Profile.Positionals.FlankType.Description()))
+                {
+                    foreach (FlankRegionSetting setting in Enum.GetValues(typeof(FlankRegionSetting)))
+                    {
+                        if (ImGui.Selectable(setting.Description()))
+                        {
                             Profile.Positionals.FlankType = setting;
                         }
                     }
@@ -225,34 +223,46 @@ namespace Resonant
             {
                 // update current profile name
                 Profile.Name = Encoding.Default.GetString(PromptProfileName);
-            } else {
+            }
+            else
+            {
                 SetProfileNamePrompt(ConfigManager.Config.Active.Name);
             }
 
             ImGui.Text("Use profile for jobs:");
-            foreach (var (classJob, index) in GetCombatClassJobs().Select((job, ndx) => (job, ndx))) {
+            foreach (var (classJob, index) in GetCombatClassJobs().Select((job, ndx) => (job, ndx)))
+            {
                 // todo: combine pre-job classes with the job like GLA/PLD and MRD/WAR
                 // special case: ACN->SMN (not SCH)
-                if ((index) % 3 != 0) {
+                if ((index) % 3 != 0)
+                {
                     ImGui.SameLine();
                 }
 
                 var isChecked = ConfigManager.ActiveProfile.Jobs.Contains(classJob.Abbreviation);
                 var assignedProfile = ConfigManager.Config.ProfileForClassJob(classJob.Abbreviation);
 
-                if (assignedProfile != null && assignedProfile != Profile) {
+                if (assignedProfile != null && assignedProfile != Profile)
+                {
                     var unchanging = false;
                     ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.5f);
                     ImGui.Checkbox(classJob.Abbreviation, ref unchanging);
                     ImGui.PopStyleVar();
-                    if (ImGui.IsItemHovered()) {
+                    if (ImGui.IsItemHovered())
+                    {
                         ImGui.SetTooltip($"Assigned to profile: {assignedProfile.Name}");
                     }
-                } else {
-                    if (ImGui.Checkbox(classJob.Abbreviation, ref isChecked)) {
-                        if (isChecked) {
+                }
+                else
+                {
+                    if (ImGui.Checkbox(classJob.Abbreviation, ref isChecked))
+                    {
+                        if (isChecked)
+                        {
                             ConfigManager.ActiveProfile.Jobs.Add(classJob.Abbreviation);
-                        } else {
+                        }
+                        else
+                        {
                             ConfigManager.ActiveProfile.Jobs.Remove(classJob.Abbreviation);
                         }
                     }
@@ -279,9 +289,9 @@ namespace Resonant
             }
 
             var displaySize = ImGui.GetIO().DisplaySize;
-            var windowSize = Profile.ViewportWindowBox.SizeWith(displaySize);
+            var windowSize = Config.ViewportWindowBox.SizeWith(displaySize);
 
-            ImGui.SetNextWindowPos(Profile.ViewportWindowBox.TopLeft, ImGuiCond.Appearing);
+            ImGui.SetNextWindowPos(Config.ViewportWindowBox.TopLeft, ImGuiCond.Appearing);
             ImGui.SetNextWindowSize(windowSize, ImGuiCond.Always);
 
             if (ImGui.Begin("Viewport Window", ref ConfigManager.ViewportUIVisible))
@@ -297,27 +307,27 @@ namespace Resonant
 
                 if (ImGui.Button("Maximize"))
                 {
-                    Profile.ViewportWindowBox = new();
-                    ImGui.SetWindowPos(Profile.ViewportWindowBox.TopLeft);
+                    Config.ViewportWindowBox = new();
+                    ImGui.SetWindowPos(Config.ViewportWindowBox.TopLeft);
                 }
                 else if (ImGui.Button("Max Horizontal"))
                 {
-                    Profile.ViewportWindowBox.TopLeft.X = 0;
-                    Profile.ViewportWindowBox.BottomRight.X = 0;
-                    ImGui.SetWindowPos(Profile.ViewportWindowBox.TopLeft);
+                    Config.ViewportWindowBox.TopLeft.X = 0;
+                    Config.ViewportWindowBox.BottomRight.X = 0;
+                    ImGui.SetWindowPos(Config.ViewportWindowBox.TopLeft);
                 }
                 else
                 {
-                    Profile.ViewportWindowBox.TopLeft = ImGui.GetWindowPos();
-                    Profile.ViewportWindowBox.BottomRight = displaySize - ImGui.GetWindowPos() - ImGui.GetWindowSize();
+                    Config.ViewportWindowBox.TopLeft = ImGui.GetWindowPos();
+                    Config.ViewportWindowBox.BottomRight = displaySize - ImGui.GetWindowPos() - ImGui.GetWindowSize();
                 }
 
                 ImGui.Separator();
 
                 ImGui.Text($"Settings");
-                ImGui.Text($"Top left: {Profile.ViewportWindowBox.TopLeft}");
-                ImGui.Text($"Bottom right: {Profile.ViewportWindowBox.BottomRight}");
-                ImGui.Text($"Size: {Profile.ViewportWindowBox.SizeWith(displaySize)}");
+                ImGui.Text($"Top left: {Config.ViewportWindowBox.TopLeft}");
+                ImGui.Text($"Bottom right: {Config.ViewportWindowBox.BottomRight}");
+                ImGui.Text($"Size: {Config.ViewportWindowBox.SizeWith(displaySize)}");
 
                 ImGui.Separator();
 
@@ -341,7 +351,8 @@ namespace Resonant
             ImGui.DragInt($"##{label}", ref v, v_speed, v_min, v_max);
         }
 
-        List<ClassJob> GetCombatClassJobs() {
+        List<ClassJob> GetCombatClassJobs()
+        {
             return DataManager
                 .GetExcelSheet<ClassJob>()!
                 .Where(

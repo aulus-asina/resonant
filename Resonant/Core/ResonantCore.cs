@@ -30,7 +30,7 @@ namespace Resonant
             ConfigManager = configManager;
             ClientState = clientState;
             Gui = gui;
-            Canvas = new Canvas(Profile, Gui);
+            Canvas = new Canvas(ConfigManager.Config, Gui);
             GameStateObserver = new(clientState, dataManager);
 
             Initialize();

@@ -26,13 +26,14 @@ namespace Resonant
 
     internal class Canvas
     {
-        private ConfigurationProfile Profile { get; }
+        private Configuration Config { get; }
+        private ConfigurationProfile Profile { get { return Config.Active; } }
 
         private GameGui Gui { get; }
 
-        internal Canvas(ConfigurationProfile profile, GameGui gui)
+        internal Canvas(Configuration config, GameGui gui)
         {
-            Profile = profile;
+            Config = config;
             Gui = gui;
         }
 
@@ -40,13 +41,13 @@ namespace Resonant
         {
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
             ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGuiHelpers.SetNextWindowPosRelativeMainViewport(Profile.ViewportWindowBox.TopLeft);
+            ImGuiHelpers.SetNextWindowPosRelativeMainViewport(Config.ViewportWindowBox.TopLeft);
             ImGui.Begin("ResonantOverlay",
                 ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoTitleBar |
                 ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground);
 
             var displaySize = ImGui.GetIO().DisplaySize;
-            ImGui.SetWindowSize(Profile.ViewportWindowBox.SizeWith(displaySize));
+            ImGui.SetWindowSize(Config.ViewportWindowBox.SizeWith(displaySize));
         }
 
         // ----------- actor-aware draw methods --------------
