@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Authors>Aulus mal Asina</Authors>
-	<Company></Company>
+    <Company></Company>
     <Version>0.0.0.5</Version>
     <Description>Resonant</Description>
 	<Copyright></Copyright>

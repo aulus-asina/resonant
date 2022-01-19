@@ -1,12 +1,15 @@
 ---
-name: build
+name: release
 
 on:
   workflow_dispatch:
-  push:
+    inputs:
+      version:
+        description: Version
+        required: true
 
 jobs:
-  build:
+  build_and_release:
     runs-on: windows-latest
 
     steps:
@@ -28,7 +31,7 @@ jobs:
         run: dotnet restore
 
       - name: build
-        run: dotnet build --configuration Release --no-restore --nologo
+        run: dotnet build --configuration Release --no-restore --nologo /p:Version=${{ env.INPUT_VERSION }}
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: false
 
@@ -39,24 +42,12 @@ jobs:
           path: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\latest.zip
           if-no-files-found: error
 
-
-      ## release steps - only on main
-      - name: remove previous release
-        if: github.ref == 'refs/heads/main'
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        with:
-          delete_release: true
-          tag_name: latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: release latest main
+      - name: create release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
-          name: latest
-          tag_name: latest
-          prerelease: true
+          name: Resonant ${{ env.INPUT_VERSION }}
+          tag_name: ${{ env.INPUT_VERSION }}
           files: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\*
           fail_on_unmatched_files: true
 
