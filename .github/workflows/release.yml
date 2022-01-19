@@ -9,7 +9,7 @@ on:
         required: true
 
 jobs:
-  build_and_release:
+  release:
     runs-on: windows-latest
 
     steps:
@@ -31,7 +31,7 @@ jobs:
         run: dotnet restore
 
       - name: build
-        run: dotnet build --configuration Release --no-restore --nologo /p:Version=${{ env.INPUT_VERSION }}
+        run: dotnet build --configuration Release --no-restore --nologo /p:Version=${{ github.event.inputs.version }}
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: false
 
@@ -43,11 +43,10 @@ jobs:
           if-no-files-found: error
 
       - name: create release
-        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         with:
-          name: Resonant ${{ env.INPUT_VERSION }}
-          tag_name: ${{ env.INPUT_VERSION }}
+          name: Resonant ${{ github.event.inputs.version }}
+          tag_name: ${{ github.event.inputs.version }}
           files: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\*
           fail_on_unmatched_files: true
 
