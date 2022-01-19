@@ -5,8 +5,8 @@
     <Company></Company>
     <Version>0.0.0.5</Version>
     <Description>Resonant</Description>
-	<Copyright></Copyright>
-	<PackageProjectUrl></PackageProjectUrl> 
+    <Copyright></Copyright>
+    <PackageProjectUrl></PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>

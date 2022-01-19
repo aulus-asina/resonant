@@ -5,6 +5,6 @@ description: |-
   Displays accurate player hitbox and positional outlines.
 tags:
  - combat
-repo_url: 
-icon_url: 
+repo_url: https://github.com/aulus-asina/resonant
+icon_url: https://raw.githubusercontent.com/aulus-asina/resonant/main/repo/resonant.png
 dalamud_api_level: 5
