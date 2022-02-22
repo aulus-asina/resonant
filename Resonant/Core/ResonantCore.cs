@@ -13,6 +13,7 @@ namespace Resonant
     {
         private const float RangeAutoAttack = 2.1f;
         private const float RangeAbilityMelee = 3f;
+        private const float RangeAbilityFar = 6f;
 
         private ConfigurationManager ConfigManager;
         private ClientState ClientState;
@@ -146,8 +147,9 @@ namespace Resonant
             var hitboxes = playerHitbox + target.HitboxRadius;
             var melee = hitboxes + RangeAutoAttack; // XXX: is this fully accurate? is there a real analysis around this value?
             var ability = hitboxes + RangeAbilityMelee;
+            var abilityfar = hitboxes + c.FarAbilityRange;
 
-            var regionBrushes = Regions.FromConfig(c, melee, ability);
+            var regionBrushes = Regions.FromConfig(c, melee, ability, abilityfar);
 
             if (c.ArrowEnabled)
             {
