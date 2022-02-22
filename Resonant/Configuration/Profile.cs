@@ -46,7 +46,10 @@ namespace Resonant
             public bool Enabled = true;
 
             public bool MeleeAbilityRange = true;
+            public bool MeleeAbilityRangeFar = true;
             public int MeleeAbilityThickness = 1;
+            public int FarAbilityThickness = 1;
+            public int FarAbilityRange = 6;
 
             public int Thickness = 3;
             public Vector4 ColorFront = ColorPresets.Red;
