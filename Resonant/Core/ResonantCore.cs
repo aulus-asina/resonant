@@ -13,7 +13,6 @@ namespace Resonant
     {
         private const float RangeAutoAttack = 2.1f;
         private const float RangeAbilityMelee = 3f;
-        private const float RangeAbilityFar = 6f;
 
         private ConfigurationManager ConfigManager;
         private ClientState ClientState;
