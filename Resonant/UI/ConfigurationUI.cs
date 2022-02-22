@@ -143,6 +143,13 @@ namespace Resonant
                     DragInt("Thickness##MeleeAbilityThickness", ref Profile.Positionals.MeleeAbilityThickness, 1, 1, 50);
                 }
 
+                ImGui.Checkbox("6y Ability Range", ref Profile.Positionals.MeleeAbilityRangeFar);
+                if (Profile.Positionals.MeleeAbilityRangeFar)
+                {
+                    DragInt("Thickness##FarAbilityThickness", ref Profile.Positionals.FarAbilityThickness, 1, 1, 50);
+                    DragInt("Range##FarAbilityRange", ref Profile.Positionals.FarAbilityRange, 1, 1, 50);
+                }
+
                 ImGui.ColorEdit4("Front Color", ref Profile.Positionals.ColorFront, ImGuiColorEditFlags.NoInputs);
                 ImGui.Checkbox("Separate Front Regions", ref Profile.Positionals.FrontSeparate);
 
