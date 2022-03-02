@@ -146,8 +146,9 @@ namespace Resonant
             var hitboxes = playerHitbox + target.HitboxRadius;
             var melee = hitboxes + RangeAutoAttack; // XXX: is this fully accurate? is there a real analysis around this value?
             var ability = hitboxes + RangeAbilityMelee;
+            var abilityfar = hitboxes + c.FarAbilityRange;
 
-            var regionBrushes = Regions.FromConfig(c, melee, ability);
+            var regionBrushes = Regions.FromConfig(c, melee, ability, abilityfar);
 
             if (c.ArrowEnabled)
             {

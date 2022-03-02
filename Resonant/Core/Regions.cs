@@ -118,7 +118,7 @@ namespace Resonant
 
     internal static class Regions
     {
-        internal static List<(Region Region, Brush Brush)> FromConfig(ConfigurationProfile.PositionalsSettings c, float meleeRange, float abilityRange)
+        internal static List<(Region Region, Brush Brush)> FromConfig(ConfigurationProfile.PositionalsSettings c, float meleeRange, float abilityRange, float abilityRangeFar)
         {
             var regions = new List<(Region, Brush)>();
 
@@ -134,6 +134,15 @@ namespace Resonant
                     };
 
                     regions.Add(new(new Region(positional, meleeRange, abilityRange), abBrush));
+                }
+                if (c.MeleeAbilityRangeFar)
+                {
+                    var abBrush = brush with
+                    {
+                        Thickness = c.FarAbilityThickness
+                    };
+
+                    regions.Add(new(new Region(positional, 0, abilityRangeFar), abBrush));
                 }
             }
 
