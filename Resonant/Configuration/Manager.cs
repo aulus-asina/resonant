@@ -7,7 +7,7 @@ namespace Resonant
 {
     public class ConfigurationManager
     {
-        DalamudPluginInterface DalamudInterface;
+        IDalamudPluginInterface DalamudInterface;
 
         internal Configuration Config;
 
@@ -21,7 +21,7 @@ namespace Resonant
             set { Config.Active = value; }
         }
 
-        public ConfigurationManager(DalamudPluginInterface dalamudInterface)
+        public ConfigurationManager(IDalamudPluginInterface dalamudInterface)
         {
             DalamudInterface = dalamudInterface;
             Config = GetSavedConfig();

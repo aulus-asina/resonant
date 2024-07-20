@@ -20,6 +20,10 @@ namespace Resonant
             public Vector4 OutlineColor = ColorPresets.Black;
             public bool UseTargetY = true;
             public bool ShowTargetDeltaY = true;
+
+            public HitboxSettings()
+            {
+            }
         };
         public HitboxSettings Hitbox = new();
 
@@ -28,6 +32,10 @@ namespace Resonant
             public bool Enabled = false;
             public float Radius = 5f;
             public Brush Brush = new(ColorPresets.Green, 1);
+
+            public RingSettings()
+            {
+            }
         };
         public RingSettings TargetRing = new();
         public RingSettings PlayerRing = new();
@@ -38,6 +46,10 @@ namespace Resonant
             public float Radius = 7f;
             public int Angle = 90;
             public Brush Brush = new(ColorPresets.Blurple, 3);
+
+            public ConeSettings()
+            {
+            }
         }
         public ConeSettings Cone = new();
 
@@ -61,6 +73,10 @@ namespace Resonant
 
             public bool ArrowEnabled = true;
             public float ArrowScale = 1f;
+
+            public PositionalsSettings()
+            {
+            }
 
             public Brush BrushFront { get { return new(ColorFront, Thickness); } }
             public Brush BrushRear { get { return new(ColorRear, Thickness); } }

@@ -143,8 +143,8 @@ namespace Resonant
 
     internal struct Actor
     {
-        internal GameObject GameObject;
-        public Actor(GameObject gameObject)
+        internal IGameObject GameObject;
+        public Actor(IGameObject gameObject)
         {
             GameObject = gameObject;
         }

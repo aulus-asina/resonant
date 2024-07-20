@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Plugin.Services;
 using ImGuiNET;
 using System;
 using System.Numerics;
@@ -14,9 +15,9 @@ namespace Resonant
             get { return ConfigManager.ActiveProfile; }
         }
 
-        ClientState ClientState;
+        IClientState ClientState;
 
-        public DebugUI(ConfigurationManager configManager, ClientState clientState)
+        public DebugUI(ConfigurationManager configManager, IClientState clientState)
         {
             ConfigManager = configManager;
             ClientState = clientState;
@@ -26,7 +27,7 @@ namespace Resonant
         {
             var player = ClientState.LocalPlayer;
             var target = ClientState.LocalPlayer?.TargetObject;
-            if (!player || !ConfigManager.DebugUIVisible) { return; }
+            if (player == null || !ConfigManager.DebugUIVisible) { return; }
 
             ImGui.SetNextWindowSize(new Vector2(300, 300), ImGuiCond.Always);
             if (ImGui.Begin("Resonant Debug", ref ConfigManager.Config.Debug))
@@ -44,7 +45,7 @@ namespace Resonant
                     ImGui.Text($"Subkind: {target.SubKind}");
                     ImGui.Text($"Type: {target.GetType()}");
 
-                    var battle = target as BattleNpc;
+                    var battle = target as IBattleNpc;
                     if (battle != null)
                     {
                         ImGui.Text($"Kind: {battle.BattleNpcKind}");
@@ -61,7 +62,7 @@ namespace Resonant
             ImGui.End();
         }
 
-        private float Distance(GameObject? a, GameObject? b)
+        private float Distance(IGameObject? a, IGameObject? b)
         {
             if (a == null || b == null) { return 0f; }
 

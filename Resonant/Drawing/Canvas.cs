@@ -1,6 +1,8 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
+using Dalamud.Interface.Utility;
+using Dalamud.Plugin.Services;
 using ImGuiNET;
 using System;
 using System.Numerics;
@@ -29,9 +31,9 @@ namespace Resonant
         private Configuration Config { get; }
         private ConfigurationProfile Profile { get { return Config.Active; } }
 
-        private GameGui Gui { get; }
+        private IGameGui Gui { get; }
 
-        internal Canvas(Configuration config, GameGui gui)
+        internal Canvas(Configuration config, IGameGui gui)
         {
             Config = config;
             Gui = gui;
@@ -51,12 +53,12 @@ namespace Resonant
         }
 
         // ----------- actor-aware draw methods --------------
-        internal void ActorConeXZ(GameObject actor, float radius, float startRads, float endRads, Brush brush)
+        internal void ActorConeXZ(IGameObject actor, float radius, float startRads, float endRads, Brush brush)
         {
             ConeXZ(actor.Position, radius, startRads + actor.Rotation, endRads + actor.Rotation, brush);
         }
 
-        internal void ActorArrowXZ(GameObject actor, float radius, float angle, float scale, Brush brush)
+        internal void ActorArrowXZ(IGameObject actor, float radius, float angle, float scale, Brush brush)
         {
             var direction = angle + actor.Rotation;
 
@@ -81,7 +83,7 @@ namespace Resonant
             shape.Done();
         }
 
-        internal void ActorDonutSliceXZ(GameObject actor, float innerRadius, float outerRadius, float startRads, float endRads, Brush brush)
+        internal void ActorDonutSliceXZ(IGameObject actor, float innerRadius, float outerRadius, float startRads, float endRads, Brush brush)
         {
             DonutSliceXZ(actor.Position, innerRadius, outerRadius, startRads + actor.Rotation, endRads + actor.Rotation, brush);
         }

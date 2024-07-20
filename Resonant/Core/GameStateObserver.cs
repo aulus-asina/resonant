@@ -1,13 +1,14 @@
 using System;
 using Dalamud.Data;
 using Dalamud.Game.ClientState;
+using Dalamud.Plugin.Services;
 
 namespace Resonant
 {
     internal class GameStateObserver
     {
-        ClientState ClientState { get; }
-        DataManager DataManager { get; }
+        IClientState ClientState { get; }
+        IDataManager DataManager { get; }
 
         // todo: use enum value from Lumina instead of string abbreviation
         string? CurrentJobAbbrev;
@@ -15,7 +16,7 @@ namespace Resonant
         public event EventHandler<string> JobChangedEvent;
 
         // todo: figure out why c# is giving a warning about non-nullable event
-        internal GameStateObserver(ClientState clientState, DataManager dataManager)
+        internal GameStateObserver(IClientState clientState, IDataManager dataManager)
         {
             ClientState = clientState;
             DataManager = dataManager;

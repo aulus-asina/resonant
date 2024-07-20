@@ -19,6 +19,11 @@ namespace Resonant
             // relative to the viewport's topleft/bottomright
             public Vector2 TopLeft = new(0, 0);
             public Vector2 BottomRight = new(0, 0);
+
+            public WindowBoxSettings()
+            {
+            }
+
             public Vector2 SizeWith(Vector2 viewportSize)
             {
                 return viewportSize - TopLeft - BottomRight;

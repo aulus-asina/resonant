@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections.Generic;
 using Dalamud.Data;
 using Lumina.Excel.GeneratedSheets;
+using Dalamud.Plugin.Services;
 
 namespace Resonant
 {
@@ -17,11 +18,11 @@ namespace Resonant
         ConfigurationProfile Profile { get { return ConfigManager.ActiveProfile; } }
         List<ConfigurationProfile> Profiles { get { return ConfigManager.Config.Profiles; } }
 
-        DataManager DataManager { get; }
+        IDataManager DataManager { get; }
 
         private byte[] PromptProfileName = new byte[512];
 
-        public ConfigurationUI(ConfigurationManager configManager, DataManager dataManager)
+        public ConfigurationUI(ConfigurationManager configManager, IDataManager dataManager)
         {
             ConfigManager = configManager;
             DataManager = dataManager;

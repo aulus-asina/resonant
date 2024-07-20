@@ -4,6 +4,7 @@ using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Gui;
 using Dalamud.Logging;
+using Dalamud.Plugin.Services;
 using ImGuiNET;
 using System;
 
@@ -15,8 +16,9 @@ namespace Resonant
         private const float RangeAbilityMelee = 3f;
 
         private ConfigurationManager ConfigManager;
-        private ClientState ClientState;
-        private GameGui Gui;
+        private IClientState ClientState;
+        private IGameGui Gui;
+        private IPluginLog Logger;
         private Canvas Canvas;
         private GameStateObserver GameStateObserver;
 
@@ -25,13 +27,14 @@ namespace Resonant
             get { return ConfigManager.Config.Active; }
         }
 
-        public ResonantCore(ConfigurationManager configManager, ClientState clientState, GameGui gui, DataManager dataManager)
+        public ResonantCore(ConfigurationManager configManager, IClientState clientState, IGameGui gui, IDataManager dataManager, IPluginLog logger)
         {
             ConfigManager = configManager;
             ClientState = clientState;
             Gui = gui;
             Canvas = new Canvas(ConfigManager.Config, Gui);
             GameStateObserver = new(clientState, dataManager);
+            Logger = logger;
 
             Initialize();
         }
@@ -82,7 +85,7 @@ namespace Resonant
             ImGui.PopStyleVar();
         }
 
-        private void DrawHitbox(Character player)
+        private void DrawHitbox(ICharacter player)
         {
             var pos = player.Position;
             var c = Profile.Hitbox;
@@ -101,13 +104,13 @@ namespace Resonant
             Canvas.CircleXZ(pos, .01f, new(c.Color, 4));
         }
 
-        private void DrawPlayerRing(Character player)
+        private void DrawPlayerRing(ICharacter player)
         {
             var c = Profile.PlayerRing;
             Canvas.CircleXZ(player.Position, c.Radius, c.Brush);
         }
 
-        private void DrawPlayerCone(Character player)
+        private void DrawPlayerCone(ICharacter player)
         {
             // rotate arc towards target (if exists)
             var c = Profile.Cone;
@@ -119,7 +122,7 @@ namespace Resonant
             Canvas.ConeCenteredXZ(player.Position, c.Radius, (float)rotation, Maths.Radians(c.Angle), c.Brush);
         }
 
-        private void DrawTargetRing(Character player)
+        private void DrawTargetRing(ICharacter player)
         {
             if (player.TargetObject != null)
             {
@@ -127,7 +130,7 @@ namespace Resonant
             }
         }
 
-        private void DrawPositionals(Character player)
+        private void DrawPositionals(ICharacter player)
         {
             var c = Profile.Positionals;
             var target = player.TargetObject;
@@ -194,7 +197,7 @@ namespace Resonant
             }
         }
 
-        private void DrawEnemyArrow(GameObject target, float angle, float pointRadius)
+        private void DrawEnemyArrow(IGameObject target, float angle, float pointRadius)
         {
             var c = Profile.Positionals;
             Canvas.ActorArrowXZ(target, pointRadius, angle, c.ArrowScale, c.BrushFront);
@@ -204,13 +207,13 @@ namespace Resonant
         {
             if (ConfigManager.Config.Debug)
             {
-                PluginLog.Log(message, values);
+                Logger.Info(message, values);
             }
         }
 
         private void OnJobChange(object sender, string classJobAbbrev)
         {
-            Dalamud.Logging.PluginLog.Log($"Detected class change: {classJobAbbrev}");
+            Logger.Info($"Detected class change: {classJobAbbrev}");
 
             var profile = ConfigManager.Config.ProfileForClassJob(classJobAbbrev);
             if (profile != null) {

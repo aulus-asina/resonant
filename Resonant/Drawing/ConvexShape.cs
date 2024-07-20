@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.Gui;
 using Dalamud.Logging;
+using Dalamud.Plugin.Services;
 using ImGuiNET;
 using System;
 using System.Numerics;
@@ -10,12 +11,12 @@ namespace Resonant
     internal class ConvexShape
     {
         internal readonly Brush Brush;
-        internal readonly GameGui Gui;
+        internal readonly IGameGui Gui;
         internal readonly ImDrawListPtr DrawList;
 
         internal bool cullObject = true;
 
-        internal ConvexShape(GameGui gui, Brush brush)
+        internal ConvexShape(IGameGui gui, Brush brush)
         {
             Gui = gui;
             Brush = brush;

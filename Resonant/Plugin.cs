@@ -4,6 +4,7 @@ using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using System;
 
 namespace Resonant
@@ -12,8 +13,8 @@ namespace Resonant
     {
         public string Name => "Resonant";
 
-        private DalamudPluginInterface DalamudInterface { get; }
-        private CommandManager CommandManager { get; }
+        private IDalamudPluginInterface DalamudInterface { get; }
+        private ICommandManager CommandManager { get; }
         private ConfigurationManager ConfigManager { get; }
 
         private ConfigurationUI ConfigUI { get; }
@@ -21,11 +22,12 @@ namespace Resonant
         private ResonantCore ResonantCore { get; }
 
         public Plugin(
-            [RequiredVersion("1.0")] DalamudPluginInterface dalamudInterface,
-            [RequiredVersion("1.0")] CommandManager commandManager,
-            ClientState clientState,
-            GameGui gameGui,
-            DataManager dataManager
+            IDalamudPluginInterface dalamudInterface,
+            ICommandManager commandManager,
+            IClientState clientState,
+            IGameGui gameGui,
+            IDataManager dataManager,
+            IPluginLog logger
         )
         {
             DalamudInterface = dalamudInterface;
@@ -36,7 +38,7 @@ namespace Resonant
             ConfigUI = new ConfigurationUI(ConfigManager, dataManager);
             DebugUI = new DebugUI(ConfigManager, clientState);
 
-            ResonantCore = new ResonantCore(ConfigManager, clientState, gameGui, dataManager);
+            ResonantCore = new ResonantCore(ConfigManager, clientState, gameGui, dataManager, logger);
 
             Initialize();
         }
@@ -49,6 +51,11 @@ namespace Resonant
             });
 
             DalamudInterface.UiBuilder.Draw += Draw;
+
+            DalamudInterface.UiBuilder.OpenMainUi += () =>
+            {
+                ConfigManager.ConfigUIVisible = true;
+            };
 
             DalamudInterface.UiBuilder.OpenConfigUi += () =>
             {
