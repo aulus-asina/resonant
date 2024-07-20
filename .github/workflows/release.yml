@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.7
 
       - name: prepare (dotnet)
-        uses: actions/setup-dotnet@v1.9.0
+        uses: actions/setup-dotnet@v4.0.1
         with:
-          dotnet-version: '6.x'
+          dotnet-version: '8.x'
 
       - name: prepare (dalamud)
         run: |
@@ -36,14 +36,14 @@ jobs:
           DOTNET_CLI_TELEMETRY_OPTOUT: false
 
       - name: upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4.3.4
         with:
           name: Resonant
           path: ${{ env.APPDATA }}\XIVLauncher\devPlugins\Resonant\Resonant\latest.zip
           if-no-files-found: error
 
       - name: create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2.0.8
         with:
           name: Resonant ${{ github.event.inputs.version }}
           tag_name: ${{ github.event.inputs.version }}
