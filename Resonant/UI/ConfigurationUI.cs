@@ -133,46 +133,48 @@ namespace Resonant
 
         void TabTarget()
         {
-            ImGui.Checkbox("Positionals", ref Profile.Positionals.Enabled);
-            if (Profile.Positionals.Enabled)
+            ImGui.Checkbox("Positionals", ref Profile.TargetPositionals.Enabled);
+            if (Profile.TargetPositionals.Enabled)
             {
-                DragInt("Thickness", ref Profile.Positionals.Thickness, 1, 0, 50);
+                ImGui.Checkbox("Use Player Y", ref Profile.TargetPositionals.UsePlayerY);
 
-                ImGui.Checkbox("Melee Ability Range (> Melee Range!)", ref Profile.Positionals.MeleeAbilityRange);
-                if (Profile.Positionals.MeleeAbilityRange)
+                DragInt("Thickness", ref Profile.TargetPositionals.Thickness, 1, 0, 50);
+
+                ImGui.Checkbox("Melee Ability Range (> Melee Range!)", ref Profile.TargetPositionals.MeleeAbilityRange);
+                if (Profile.TargetPositionals.MeleeAbilityRange)
                 {
-                    DragInt("Thickness##MeleeAbilityThickness", ref Profile.Positionals.MeleeAbilityThickness, 1, 1, 50);
+                    DragInt("Thickness##MeleeAbilityThickness", ref Profile.TargetPositionals.MeleeAbilityThickness, 1, 1, 50);
                 }
 
-                ImGui.ColorEdit4("Front Color", ref Profile.Positionals.ColorFront, ImGuiColorEditFlags.NoInputs);
-                ImGui.Checkbox("Separate Front Regions", ref Profile.Positionals.FrontSeparate);
+                ImGui.ColorEdit4("Front Color", ref Profile.TargetPositionals.ColorFront, ImGuiColorEditFlags.NoInputs);
+                ImGui.Checkbox("Separate Front Regions", ref Profile.TargetPositionals.FrontSeparate);
 
-                ImGui.ColorEdit4("Flank Color", ref Profile.Positionals.ColorFlank, ImGuiColorEditFlags.NoInputs);
-                if (ImGui.BeginCombo("Flank Regions", Profile.Positionals.FlankType.Description()))
+                ImGui.ColorEdit4("Flank Color", ref Profile.TargetPositionals.ColorFlank, ImGuiColorEditFlags.NoInputs);
+                if (ImGui.BeginCombo("Flank Regions", Profile.TargetPositionals.FlankType.Description()))
                 {
                     foreach (FlankRegionSetting setting in Enum.GetValues(typeof(FlankRegionSetting)))
                     {
                         if (ImGui.Selectable(setting.Description()))
                         {
-                            Profile.Positionals.FlankType = setting;
+                            Profile.TargetPositionals.FlankType = setting;
                         }
                     }
                     ImGui.EndCombo();
                 }
 
-                ImGui.ColorEdit4("Rear Color", ref Profile.Positionals.ColorRear, ImGuiColorEditFlags.NoInputs);
-                ImGui.Checkbox("Separate Rear Regions", ref Profile.Positionals.RearSeparate);
+                ImGui.ColorEdit4("Rear Color", ref Profile.TargetPositionals.ColorRear, ImGuiColorEditFlags.NoInputs);
+                ImGui.Checkbox("Separate Rear Regions", ref Profile.TargetPositionals.RearSeparate);
 
-                ImGui.Checkbox("Highlight Current Region", ref Profile.Positionals.HighlightCurrentRegion);
-                if (Profile.Positionals.HighlightCurrentRegion)
+                ImGui.Checkbox("Highlight Current Region", ref Profile.TargetPositionals.HighlightCurrentRegion);
+                if (Profile.TargetPositionals.HighlightCurrentRegion)
                 {
-                    DragFloat("Highlight Alpha Multiplier", ref Profile.Positionals.HighlightTransparencyMultiplier, .01f, 0f, 1f);
+                    DragFloat("Highlight Alpha Multiplier", ref Profile.TargetPositionals.HighlightTransparencyMultiplier, .01f, 0f, 1f);
                 }
 
-                ImGui.Checkbox("Front Arrow", ref Profile.Positionals.ArrowEnabled);
-                if (Profile.Positionals.ArrowEnabled)
+                ImGui.Checkbox("Front Arrow", ref Profile.TargetPositionals.ArrowEnabled);
+                if (Profile.TargetPositionals.ArrowEnabled)
                 {
-                    DragFloat("Arrow Scale##FrontArrow", ref Profile.Positionals.ArrowScale, .01f, 0f, 1f);
+                    DragFloat("Arrow Scale##FrontArrow", ref Profile.TargetPositionals.ArrowScale, .01f, 0f, 1f);
                 }
             }
 

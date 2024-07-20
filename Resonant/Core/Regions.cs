@@ -51,7 +51,7 @@ namespace Resonant
         internal static Positional RearLeft = Positional.FromDegrees(135, 180);
         internal static Positional RearRight = Positional.FromDegrees(180, 225);
 
-        internal static List<Positional> FrontPositionals(ConfigurationProfile.PositionalsSettings c)
+        internal static List<Positional> FrontPositionals(ConfigurationProfile.TargetPositionalSettings c)
         {
             // todo: make logic cleaner
             if (c.FlankType == FlankRegionSetting.RearOnly) {
@@ -69,7 +69,7 @@ namespace Resonant
             }
         }
 
-        internal static List<Positional> FlankPositionals(ConfigurationProfile.PositionalsSettings c)
+        internal static List<Positional> FlankPositionals(ConfigurationProfile.TargetPositionalSettings c)
         {
             switch (c.FlankType)
             {
@@ -83,14 +83,14 @@ namespace Resonant
             }
         }
 
-        internal static List<Positional> RearPositionals(ConfigurationProfile.PositionalsSettings c)
+        internal static List<Positional> RearPositionals(ConfigurationProfile.TargetPositionalSettings c)
         {
             return c.RearSeparate
                 ? new List<Positional> { RearLeft, RearRight }
                 : new List<Positional> { Rear };
         }
 
-        internal static List<(Positional, Brush)> FromConfig(ConfigurationProfile.PositionalsSettings c)
+        internal static List<(Positional, Brush)> FromConfig(ConfigurationProfile.TargetPositionalSettings c)
         {
             List<(Positional, Brush)> positionals = new();
 
@@ -118,7 +118,7 @@ namespace Resonant
 
     internal static class Regions
     {
-        internal static List<(Region Region, Brush Brush)> FromConfig(ConfigurationProfile.PositionalsSettings c, float meleeRange, float abilityRange)
+        internal static List<(Region Region, Brush Brush)> FromConfig(ConfigurationProfile.TargetPositionalSettings c, float meleeRange, float abilityRange)
         {
             var regions = new List<(Region, Brush)>();
 

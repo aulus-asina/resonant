@@ -58,14 +58,14 @@ namespace Resonant
             ConeXZ(actor.Position, radius, startRads + actor.Rotation, endRads + actor.Rotation, brush);
         }
 
-        internal void ActorArrowXZ(IGameObject actor, float radius, float angle, float scale, Brush brush)
+        internal void ActorArrowXZ(Vector3 position, float rotation, float radius, float angle, float scale, Brush brush)
         {
-            var direction = angle + actor.Rotation;
+            var direction = angle + rotation;
 
             // scale the drawing by shifting the "circle center" up the radial
             // and reducing the radius accordingly
             var centerOffset = radius * (1 - scale);
-            var pos = actor.Position + new Vector3(
+            var pos = position + new Vector3(
                 centerOffset * (float)Math.Sin(direction),
                 0,
                 centerOffset * (float)Math.Cos(direction)
@@ -83,9 +83,9 @@ namespace Resonant
             shape.Done();
         }
 
-        internal void ActorDonutSliceXZ(IGameObject actor, float innerRadius, float outerRadius, float startRads, float endRads, Brush brush)
+        internal void ActorDonutSliceXZ(Vector3 position, float rotation, float innerRadius, float outerRadius, float startRads, float endRads, Brush brush)
         {
-            DonutSliceXZ(actor.Position, innerRadius, outerRadius, startRads + actor.Rotation, endRads + actor.Rotation, brush);
+            DonutSliceXZ(position, innerRadius, outerRadius, startRads + rotation, endRads + rotation, brush);
         }
 
         internal void CircleXZ(Vector3 position, float radius, Brush brush)

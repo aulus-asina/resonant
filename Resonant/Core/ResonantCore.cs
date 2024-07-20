@@ -7,6 +7,7 @@ using Dalamud.Logging;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
 using System;
+using System.Numerics;
 
 namespace Resonant
 {
@@ -71,7 +72,7 @@ namespace Resonant
                 DrawTargetRing(player);
             }
 
-            if (Profile.Positionals.Enabled)
+            if (Profile.TargetPositionals.Enabled)
             {
                 DrawPositionals(player);
             }
@@ -132,13 +133,19 @@ namespace Resonant
 
         private void DrawPositionals(ICharacter player)
         {
-            var c = Profile.Positionals;
+            var config = Profile.TargetPositionals;
             var target = player.TargetObject;
 
             // don't draw positionals if not targeting a battle mob
             if (target == null || target.ObjectKind != ObjectKind.BattleNpc)
             {
                 return;
+            }
+
+            var targetPos = target.Position;
+            if (config.UsePlayerY)
+            {
+                targetPos.Y = player.Position.Y;
             }
 
             // annoyingly, the hitbox size changes on mounts. maybe detect and hardcode, its a slight annoyance in the world
@@ -150,18 +157,19 @@ namespace Resonant
             var melee = hitboxes + RangeAutoAttack; // XXX: is this fully accurate? is there a real analysis around this value?
             var ability = hitboxes + RangeAbilityMelee;
 
-            var regionBrushes = Regions.FromConfig(c, melee, ability);
+            var regionBrushes = Regions.FromConfig(config, melee, ability);
 
-            if (c.ArrowEnabled)
+            if (config.ArrowEnabled)
             {
-                DrawEnemyArrow(target, 0, melee);
+                DrawEnemyArrow(targetPos, target.Rotation, 0, melee);
             }
 
             // TODO: If the target doesn't need positionals then don't draw sectors
             foreach (var (region, brush) in regionBrushes)
             {
                 Canvas.ActorDonutSliceXZ(
-                    target,
+                    targetPos,
+                    target.Rotation,
                     region.Radius.Inner,
                     region.Radius.Outer,
                     region.Positional.StartRads,
@@ -170,7 +178,7 @@ namespace Resonant
                 );
             }
 
-            if (c.HighlightCurrentRegion)
+            if (config.HighlightCurrentRegion)
             {
                 var targetActor = new Actor(target);
                 foreach (var (region, brush) in regionBrushes)
@@ -181,12 +189,13 @@ namespace Resonant
                         {
                             Fill = brush.Color with
                             {
-                                W = brush.Color.W * c.HighlightTransparencyMultiplier
+                                W = brush.Color.W * config.HighlightTransparencyMultiplier
                             }
                         };
 
                         Canvas.ActorDonutSliceXZ(
-                            target,
+                            targetPos,
+                            target.Rotation,
                             region.Radius.Inner, region.Radius.Outer,
                             region.Positional.StartRads, region.Positional.EndRads,
                             fillBrush
@@ -197,10 +206,10 @@ namespace Resonant
             }
         }
 
-        private void DrawEnemyArrow(IGameObject target, float angle, float pointRadius)
+        private void DrawEnemyArrow(Vector3 position, float rotation, float angle, float pointRadius)
         {
-            var c = Profile.Positionals;
-            Canvas.ActorArrowXZ(target, pointRadius, angle, c.ArrowScale, c.BrushFront);
+            var c = Profile.TargetPositionals;
+            Canvas.ActorArrowXZ(position, rotation, pointRadius, angle, c.ArrowScale, c.BrushFront);
         }
 
         internal void Debug(String message, params object[] values)

@@ -53,9 +53,10 @@ namespace Resonant
         }
         public ConeSettings Cone = new();
 
-        public struct PositionalsSettings
+        public struct TargetPositionalSettings
         {
             public bool Enabled = true;
+            public bool UsePlayerY = true;
 
             public bool MeleeAbilityRange = true;
             public int MeleeAbilityThickness = 1;
@@ -74,7 +75,7 @@ namespace Resonant
             public bool ArrowEnabled = true;
             public float ArrowScale = 1f;
 
-            public PositionalsSettings()
+            public TargetPositionalSettings()
             {
             }
 
@@ -82,7 +83,7 @@ namespace Resonant
             public Brush BrushRear { get { return new(ColorRear, Thickness); } }
             public Brush BrushFlank { get { return new(ColorFlank, Thickness); } }
         }
-        public PositionalsSettings Positionals = new();
+        public TargetPositionalSettings TargetPositionals = new();
 
         public List<string> Jobs = new();
 
