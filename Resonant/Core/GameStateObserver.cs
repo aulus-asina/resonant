@@ -13,9 +13,8 @@ namespace Resonant
         // todo: use enum value from Lumina instead of string abbreviation
         string? CurrentJobAbbrev;
 
-        public event EventHandler<string> JobChangedEvent;
+        public event EventHandler<string>? JobChangedEvent;
 
-        // todo: figure out why c# is giving a warning about non-nullable event
         internal GameStateObserver(IClientState clientState, IDataManager dataManager)
         {
             ClientState = clientState;
