@@ -211,7 +211,7 @@ namespace Resonant
             }
         }
 
-        private void OnJobChange(object sender, string classJobAbbrev)
+        private void OnJobChange(object? sender, string classJobAbbrev)
         {
             Logger.Info($"Detected class change: {classJobAbbrev}");
 

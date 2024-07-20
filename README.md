@@ -1,4 +1,6 @@
 # Resonant [![build](https://github.com/aulus-asina/resonant/actions/workflows/build.yml/badge.svg)](https://github.com/aulus-asina/resonant/actions/workflows/build.yml)
+**Now updated for Dawntrail!**
+
 A power worthy of Lord Zenos. Resonant is a Dalamud plugin that draws positional information in the world. 
 
 ![Target positionals with player hitbox](/repo/positionals.png)
