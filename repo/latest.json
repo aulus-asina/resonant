@@ -4,8 +4,8 @@
     "Name": "Resonant",
     "Description": "Displays accurate player hitbox and positional outlines.",
     "InternalName": "Resonant",
-    "AssemblyVersion": "0.0.1.0",
-    "TestingAssemblyVersion": "0.0.1.0",
+    "AssemblyVersion": "0.0.1.1",
+    "TestingAssemblyVersion": "0.0.1.1",
     "RepoUrl": "https://github.com/aulus-asina/resonant",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 10,
@@ -14,9 +14,9 @@
     "DownloadCount": 0,
     "LastUpdate": 0,
     "LoadPriority": 0,
-    "DownloadLinkInstall": "https://github.com/aulus-asina/resonant/releases/download/0.0.1.0/latest.zip",
-    "DownloadLinkTesting": "https://github.com/aulus-asina/resonant/releases/download/0.0.1.0/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/aulus-asina/resonant/releases/download/0.0.1.0/latest.zip",
+    "DownloadLinkInstall": "https://github.com/aulus-asina/resonant/releases/download/0.0.1.1/Resonant.zip",
+    "DownloadLinkTesting": "https://github.com/aulus-asina/resonant/releases/download/0.0.1.1/Resonant.zip",
+    "DownloadLinkUpdate": "https://github.com/aulus-asina/resonant/releases/download/0.0.1.1/Resonant.zip",
     "IconUrl": "https://raw.githubusercontent.com/aulus-asina/resonant/main/repo/resonant.png"
   }
 ]
