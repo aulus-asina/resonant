@@ -148,6 +148,10 @@ namespace Resonant
             if (Profile.TargetPositionals.Enabled)
             {
                 ImGui.Checkbox("Use Player Y", ref Profile.TargetPositionals.UsePlayerY);
+                if (Profile.TargetPositionals.UsePlayerY)
+                {
+                    ImGui.Checkbox("Draw Player Delta Y", ref Profile.TargetPositionals.ShowPlayerDeltaY);
+                }
 
                 DragInt("Thickness", ref Profile.TargetPositionals.Thickness, 1, 0, 50);
 

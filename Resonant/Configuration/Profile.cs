@@ -68,6 +68,7 @@ namespace Resonant
         {
             public bool Enabled = true;
             public bool UsePlayerY = true;
+            public bool ShowPlayerDeltaY = true;
 
             public bool MeleeAbilityRange = true;
             public int MeleeAbilityThickness = 1;

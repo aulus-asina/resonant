@@ -41,6 +41,7 @@ namespace Resonant
 
         internal void Begin()
         {
+            ImGui.PushStyleVar(ImGuiStyleVar.Alpha, Profile.General.Alpha);
             ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, new Vector2(0, 0));
             ImGuiHelpers.ForceNextWindowMainViewport();
             ImGuiHelpers.SetNextWindowPosRelativeMainViewport(Config.ViewportWindowBox.TopLeft);
@@ -50,6 +51,13 @@ namespace Resonant
 
             var displaySize = ImGui.GetIO().DisplaySize;
             ImGui.SetWindowSize(Config.ViewportWindowBox.SizeWith(displaySize));
+        }
+
+        internal void End()
+        {
+            ImGui.End();
+            ImGui.PopStyleVar(); // WindowPadding
+            ImGui.PopStyleVar(); // Alpha
         }
 
         // ----------- actor-aware draw methods --------------

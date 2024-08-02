@@ -56,7 +56,6 @@ namespace Resonant
             }
 
 
-            ImGui.PushStyleVar(ImGuiStyleVar.Alpha, Profile.General.Alpha);
             Canvas.Begin();
 
             if (Profile.PlayerRing.Enabled)
@@ -84,9 +83,7 @@ namespace Resonant
                 DrawHitbox(player);
             }
 
-            ImGui.End();
-            ImGui.PopStyleVar(); // ??
-            ImGui.PopStyleVar();
+            Canvas.End();
         }
 
         private void DrawHitbox(ICharacter player)
@@ -149,6 +146,15 @@ namespace Resonant
             if (config.UsePlayerY)
             {
                 targetPos.Y = player.Position.Y;
+
+                if (config.ShowPlayerDeltaY)
+                {
+                    Canvas.Segment(
+                        target.Position with { Y = player.Position.Y },
+                        target.Position,
+                        new(Profile.Hitbox.Color, 2)
+                    );
+                }
             }
 
             // annoyingly, the hitbox size changes on mounts. maybe detect and hardcode, its a slight annoyance in the world
@@ -228,7 +234,8 @@ namespace Resonant
             Logger.Info($"Detected class change: {classJobAbbrev}");
 
             var profile = ConfigManager.Config.ProfileForClassJob(classJobAbbrev);
-            if (profile != null) {
+            if (profile != null)
+            {
                 ConfigManager.Config.Active = profile;
             }
         }
