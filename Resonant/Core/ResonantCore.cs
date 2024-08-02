@@ -55,6 +55,8 @@ namespace Resonant
                 return;
             }
 
+
+            ImGui.PushStyleVar(ImGuiStyleVar.Alpha, Profile.General.Alpha);
             Canvas.Begin();
 
             if (Profile.PlayerRing.Enabled)
@@ -83,6 +85,7 @@ namespace Resonant
             }
 
             ImGui.End();
+            ImGui.PopStyleVar(); // ??
             ImGui.PopStyleVar();
         }
 

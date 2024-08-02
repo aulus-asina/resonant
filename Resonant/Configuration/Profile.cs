@@ -12,6 +12,17 @@ namespace Resonant
 
         public Guid ID;
 
+        public struct GeneralSettings
+        {
+            public float Alpha = 1.0f;
+
+            public GeneralSettings()
+            {
+
+            }
+        }
+        public GeneralSettings General = new();
+
         public struct HitboxSettings
         {
             public bool Enabled = true;

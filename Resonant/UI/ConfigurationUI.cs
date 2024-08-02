@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Dalamud.Data;
 using Lumina.Excel.GeneratedSheets;
 using Dalamud.Plugin.Services;
+using Dalamud.Interface.Internal.Windows.Settings.Tabs;
 
 namespace Resonant
 {
@@ -64,6 +65,11 @@ namespace Resonant
 
                 ImGui.BeginTabBar("##tabs");
 
+                if (ImGui.BeginTabItem("General"))
+                {
+                    TabGeneral();
+                    ImGui.EndTabItem();
+                }
 
                 if (ImGui.BeginTabItem("Player"))
                 {
@@ -93,6 +99,11 @@ namespace Resonant
             }
 
             ImGui.End();
+        }
+
+        void TabGeneral()
+        {
+            ImGui.DragFloat("Alpha", ref Profile.General.Alpha, .01f, 0f, 1f);
         }
 
         void TabPlayer()
